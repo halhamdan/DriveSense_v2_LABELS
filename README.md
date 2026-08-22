@@ -111,7 +111,10 @@ needs:
 
 5. **`05_technical_validation/`** — `check_video_telemetry_sync.py` and
    `make_framedrop_check.py` are the checks behind the Technical Validation section's video
-   and cross-modal timing claims. `make_availability_table.py` generates the released
+   and cross-modal timing claims. `make_multimodal_completeness_check.py` is behind
+   "Multimodal completeness around harsh events": for each released discrete harsh event, the
+   fraction with valid (non-dropout/non-missing) physiology, facial and cabin-pose data
+   available during the event window. `make_availability_table.py` generates the released
    Supplementary Table S1 (per-driver, per-session data availability).
 
 6. **`06_figures/`** — `make_technical_validation_figures.py` produces the class-distribution
