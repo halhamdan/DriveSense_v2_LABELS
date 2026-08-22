@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this code or the dataset it constructs/validates, please cite the Data Descriptor below."
+title: "DriveSense: code for constructing, de-identifying and validating a multimodal on-road driving dataset"
+type: software
+authors:
+  - family-names: Alhamdan
+    given-names: Hanadi
+    affiliation: "Durham University; Princess Nourah bint Abdulrahman University"
+  - family-names: Alosaimi
+    given-names: Ghadah
+    affiliation: "Durham University; Princess Nourah bint Abdulrahman University"
+  - family-names: Atapour-Abarghouei
+    given-names: Amir
+    affiliation: "Durham University"
+  - family-names: Arvin
+    given-names: Farshad
+    affiliation: "Durham University"
+license: MIT
+repository-code: "https://github.com/halhamdan/DriveSense"
+preferred-citation:
+  type: article
+  title: "A Multimodal On-Road Driving Dataset with Vehicle, Physiological, Facial, and In-Cabin Data"
+  authors:
+    - family-names: Alhamdan
+      given-names: Hanadi
+    - family-names: Alosaimi
+      given-names: Ghadah
+    - family-names: Atapour-Abarghouei
+      given-names: Amir
+    - family-names: Arvin
+      given-names: Farshad
+  journal: "Scientific Data"
+  year: 2026
+  # TODO: add volume/article number/DOI once assigned at publication

@@ -1,0 +1,30 @@
+# Core
+numpy
+pandas
+scipy
+
+# Video / image processing
+opencv-python
+Pillow
+
+# Face detection (video de-identification, verification audit)
+facenet-pytorch==2.6.0
+torch==2.11.0            # CPU build is sufficient; a CUDA build (used here: +cu128) speeds this up
+deepface==0.0.100        # fallback face detector if facenet-pytorch is unavailable
+
+# Facial-expression feature extraction (Methods: "Derived video and in-cabin features")
+# deepface==0.0.100 (above) covers this too; backend: tensorflow==2.21.0, detector: mtcnn==1.0.0
+# (retina-face==0.0.17 is pulled in as a deepface dependency but not the detector used here)
+mtcnn==1.0.0
+tensorflow==2.21.0
+
+# In-cabin pose extraction
+mediapipe==0.10.35       # Pose Landmarker task API, model: pose_landmarker_lite.task
+
+# Figures
+matplotlib
+seaborn
+contextily                # route map basemap tiles (make_route_map_figure.py)
+
+# External binary dependency (not pip-installable): ffmpeg / ffprobe must be
+# on PATH, or pointed to via the FFMPEG / FFPROBE environment variables.

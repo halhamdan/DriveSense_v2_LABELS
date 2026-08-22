@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 970" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <linearGradient id="cabinFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef4f7"/>
+      <stop offset="100%" stop-color="#dbe7ee"/>
+    </linearGradient>
+    <linearGradient id="seatFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6b5a46"/>
+      <stop offset="100%" stop-color="#4a3d30"/>
+    </linearGradient>
+    <linearGradient id="personFill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e3a96f"/>
+      <stop offset="100%" stop-color="#c88a52"/>
+    </linearGradient>
+    <linearGradient id="dashFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3c4550"/>
+      <stop offset="100%" stop-color="#262c34"/>
+    </linearGradient>
+    <radialGradient id="fovFront" cx="0%" cy="50%" r="100%">
+      <stop offset="0%" stop-color="#c44e52" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="#c44e52" stop-opacity="0.03"/>
+    </radialGradient>
+    <radialGradient id="fovSide" cx="0%" cy="50%" r="100%">
+      <stop offset="0%" stop-color="#4c72b0" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="#4c72b0" stop-opacity="0.03"/>
+    </radialGradient>
+    <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#1a1a1a" flood-opacity="0.18"/>
+    </filter>
+    <filter id="tinyShadow" x="-80%" y="-80%" width="260%" height="260%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#1a1a1a" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- title -->
+  <text x="700" y="46" text-anchor="middle" font-size="25" fill="#1a1a1a" font-weight="600">Equipment installation in the study vehicle</text>
+  <text x="700" y="72" text-anchor="middle" font-size="15" fill="#5b5b5b" font-style="italic">Cabin cross-section; shaded regions indicate approximate camera fields of view</text>
+
+  <g transform="translate(0,60)">
+  <!-- ================= CABIN FRAME ================= -->
+  <path filter="url(#softShadow)" d="M 220,160
+           C 320,110 480,90 620,95
+           C 760,100 880,140 955,215
+           C 985,255 995,300 995,340
+           L 995,660
+           C 830,700 560,700 300,672
+           L 260,660
+           C 235,610 220,520 218,420
+           C 216,340 216,240 220,160 Z"
+        fill="url(#cabinFill)" stroke="#9fb7c5" stroke-width="3"/>
+
+  <!-- A-pillar accent line -->
+  <path d="M 890,180 C 930,220 960,270 975,325" fill="none" stroke="#9fb7c5" stroke-width="3"/>
+
+  <!-- floor line -->
+  <path d="M 260,660 C 430,690 700,692 960,662" fill="none" stroke="#c3d3db" stroke-width="2"/>
+
+  <!-- ================= DASHBOARD ================= -->
+  <path d="M 650,560
+           C 740,540 850,530 970,545
+           C 985,585 990,625 985,655
+           C 850,690 720,688 620,660
+           C 615,625 625,590 650,560 Z"
+        fill="url(#dashFill)"/>
+  <ellipse cx="905" cy="565" rx="26" ry="10" fill="#182028"/>
+
+  <!-- ================= SEAT ================= -->
+  <path d="M 300,300
+           C 270,300 250,330 248,380
+           L 248,600
+           C 248,635 275,655 315,655
+           L 430,655
+           C 460,655 478,635 478,610
+           L 478,470
+           C 478,440 465,420 440,415
+           C 460,400 468,375 460,345
+           C 450,305 415,282 370,282
+           C 345,282 315,288 300,300 Z"
+        fill="url(#seatFill)"/>
+  <path d="M 300,300 C 320,292 345,288 370,288 C 412,288 445,310 455,347"
+        fill="none" stroke="#7a6852" stroke-width="3" opacity="0.6"/>
+
+  <!-- ================= DRIVER SILHOUETTE ================= -->
+  <path d="M 390,205
+           C 415,205 434,224 434,249
+           C 434,268 424,283 408,290
+           C 440,300 465,318 480,345
+           C 500,380 508,420 505,462
+           C 503,485 490,498 468,500
+           L 372,504
+           C 350,504 335,488 334,465
+           C 332,420 340,375 362,340
+           C 372,325 348,318 348,290
+           C 348,283 348,278 350,272
+           C 355,232 368,205 390,205 Z"
+        fill="url(#personFill)"/>
+
+  <!-- arm to wheel -->
+  <path d="M 470,392 C 540,400 610,410 660,430" fill="none" stroke="#c88a52" stroke-width="30" stroke-linecap="round"/>
+  <path d="M 470,392 C 540,400 610,410 660,430" fill="none" stroke="#e3a96f" stroke-width="22" stroke-linecap="round"/>
+
+  <!-- ================= STEERING WHEEL ================= -->
+  <g filter="url(#tinyShadow)">
+    <circle cx="700" cy="440" r="78" fill="none" stroke="#20242a" stroke-width="16"/>
+    <circle cx="700" cy="440" r="78" fill="none" stroke="#454b53" stroke-width="4"/>
+    <line x1="700" y1="440" x2="700" y2="375" stroke="#20242a" stroke-width="10"/>
+    <line x1="700" y1="440" x2="648" y2="472" stroke="#20242a" stroke-width="10"/>
+    <line x1="700" y1="440" x2="752" y2="472" stroke="#20242a" stroke-width="10"/>
+    <circle cx="700" cy="440" r="20" fill="#2b3138"/>
+  </g>
+
+  <!-- ================= DEVICE MARKERS ================= -->
+  <!-- GNSS -->
+  <circle cx="590" cy="96" r="9" fill="#1e6e5c" stroke="white" stroke-width="2.5" filter="url(#tinyShadow)"/>
+  <!-- Front camera + FOV -->
+  <path d="M 905,225 L 700,300 A 90,90 0 0,1 700,175 Z" fill="url(#fovFront)"/>
+  <circle cx="905" cy="225" r="9" fill="#c44e52" stroke="white" stroke-width="2.5" filter="url(#tinyShadow)"/>
+  <!-- Side camera + FOV -->
+  <path d="M 950,330 L 690,460 A 110,110 0 0,1 690,370 Z" fill="url(#fovSide)"/>
+  <circle cx="950" cy="330" r="9" fill="#4c72b0" stroke="white" stroke-width="2.5" filter="url(#tinyShadow)"/>
+  <!-- EmotiBit wrist -->
+  <circle cx="622" cy="422" r="9" fill="#c98a1e" stroke="white" stroke-width="2.5" filter="url(#tinyShadow)"/>
+  <!-- VBOX -->
+  <circle cx="905" cy="600" r="9" fill="#5b3a8e" stroke="white" stroke-width="2.5" filter="url(#tinyShadow)"/>
+
+  <!-- ================= CALLOUTS ================= -->
+  <!-- style helper via reusable label boxes -->
+
+  <!-- GNSS -->
+  <path d="M 590,96 C 560,60 500,45 460,45" fill="none" stroke="#1e6e5c" stroke-width="1.6"/>
+  <rect x="290" y="24" width="172" height="46" rx="8" fill="#f7f6f3" stroke="#1e6e5c" stroke-width="1.4"/>
+  <text x="376" y="43" text-anchor="middle" font-size="14.5" fill="#1a1a1a">GNSS antenna</text>
+  <text x="376" y="61" text-anchor="middle" font-size="12.5" fill="#5b5b5b">(roof-mounted)</text>
+
+  <!-- Front camera -->
+  <path d="M 905,225 C 1000,210 1080,205 1140,210" fill="none" stroke="#c44e52" stroke-width="1.6"/>
+  <rect x="1145" y="182" width="222" height="56" rx="8" fill="#f7f6f3" stroke="#c44e52" stroke-width="1.4"/>
+  <text x="1256" y="205" text-anchor="middle" font-size="14.5" fill="#1a1a1a">Front camera</text>
+  <text x="1256" y="223" text-anchor="middle" font-size="12.5" fill="#5b5b5b">(driver-facing, facial data)</text>
+
+  <!-- Side camera -->
+  <path d="M 950,330 C 1040,320 1100,318 1140,322" fill="none" stroke="#4c72b0" stroke-width="1.6"/>
+  <rect x="1145" y="296" width="222" height="56" rx="8" fill="#f7f6f3" stroke="#4c72b0" stroke-width="1.4"/>
+  <text x="1256" y="319" text-anchor="middle" font-size="14.5" fill="#1a1a1a">Side camera</text>
+  <text x="1256" y="337" text-anchor="middle" font-size="12.5" fill="#5b5b5b">(in-cabin behaviour)</text>
+
+  <!-- VBOX -->
+  <path d="M 905,600 C 1000,615 1080,622 1140,624" fill="none" stroke="#5b3a8e" stroke-width="1.6"/>
+  <rect x="1145" y="598" width="230" height="56" rx="8" fill="#f7f6f3" stroke="#5b3a8e" stroke-width="1.4"/>
+  <text x="1260" y="621" text-anchor="middle" font-size="14.5" fill="#1a1a1a">VBOX HD2 logger</text>
+  <text x="1260" y="639" text-anchor="middle" font-size="12.5" fill="#5b5b5b">+ OBD-II / CAN-bus link</text>
+
+  <!-- EmotiBit -->
+  <path d="M 622,422 C 700,470 780,505 850,520" fill="none" stroke="#c98a1e" stroke-width="1.6"/>
+  <rect x="855" y="500" width="210" height="56" rx="8" fill="#f7f6f3" stroke="#c98a1e" stroke-width="1.4"/>
+  <text x="960" y="523" text-anchor="middle" font-size="14.5" fill="#1a1a1a">EmotiBit</text>
+  <text x="960" y="541" text-anchor="middle" font-size="12.5" fill="#5b5b5b">(EDA, PPG, HR, temp., IMU)</text>
+
+  <!-- ================= LEGEND ================= -->
+  <g font-size="13.5" fill="#2a2a2a">
+    <circle cx="380" cy="820" r="8" fill="#1e6e5c"/>
+    <text x="398" y="825">Vehicle dynamics / GNSS</text>
+    <circle cx="620" cy="820" r="8" fill="#c44e52"/>
+    <text x="638" y="825">Video (facial / in-cabin)</text>
+    <circle cx="860" cy="820" r="8" fill="#5b3a8e"/>
+    <text x="878" y="825">Data logger</text>
+    <circle cx="1000" cy="820" r="8" fill="#c98a1e"/>
+    <text x="1018" y="825">Wearable biometric</text>
+  </g>
+  </g>
+</svg>
