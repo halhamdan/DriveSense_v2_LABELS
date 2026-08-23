@@ -114,7 +114,11 @@ needs:
    and cross-modal timing claims. `make_multimodal_completeness_check.py` is behind
    "Multimodal completeness around harsh events": for each released discrete harsh event, the
    fraction with valid (non-dropout/non-missing) physiology, facial and cabin-pose data
-   available during the event window. `make_availability_table.py` generates the released
+   available during the event window. `make_route_and_channel_checks.py` is behind "Route
+   consistency" (per-session GPS bounding box and total driven distance, verifying every
+   session followed the same fixed route) and the `engine_rpm`/thermopile-temperature
+   plausible-range checks in the telemetry-anomaly table and physiological-signal section.
+   `make_availability_table.py` generates the released
    Supplementary Table S1 (per-driver, per-session data availability).
 
 6. **`06_figures/`** — `make_technical_validation_figures.py` produces the class-distribution
