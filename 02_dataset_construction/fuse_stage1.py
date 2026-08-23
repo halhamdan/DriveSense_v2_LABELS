@@ -138,9 +138,19 @@ def _resample_series(
     fs_in: float,
     despike: bool = True,
     abs_threshold: float | None = None,
+    circular: bool = False,
 ) -> np.ndarray:
     """
     Despike then linearly interpolate to t_out grid.
+
+    circular=True treats v_in as a 0-360 degree angle and interpolates via
+    its unit-vector (cos, sin) components instead of the raw value, so a
+    genuine wrap-boundary crossing (e.g. 358.6 deg -> 0.1 deg, a real ~1.5
+    deg turn) interpolates the short way around the circle instead of
+    linearly through the ~358 deg false gap a naive numeric interpolation
+    sees -- previously produced released values like -19.6 deg / 379.1 deg
+    at every native wrap crossing (heading_deg only; see Technical
+    Validation for the pre-fix artefact this replaces).
 
     Anti-alias lowpass filtering is only applied when actually downsampling
     (fs_in > FUSE_FS) -- every native sensor rate in this dataset is already
@@ -166,6 +176,21 @@ def _resample_series(
         v_use = _lowpass(v_despiked, fs_in, cutoff=min(1.9, FUSE_FS / 2.0 * 0.9))
     else:
         v_use = v_despiked
+    if circular:
+        theta = np.radians(v_use)
+        cos_t, sin_t = np.cos(theta), np.sin(theta)
+        fc = interp1d(t_in, cos_t, kind="linear", bounds_error=False,
+                      fill_value=(cos_t[0], cos_t[-1]))
+        fs_ = interp1d(t_in, sin_t, kind="linear", bounds_error=False,
+                       fill_value=(sin_t[0], sin_t[-1]))
+        angle = np.degrees(np.arctan2(fs_(t_out), fc(t_out))) % 360.0
+        # Guard a float64 edge case: a tiny negative pre-modulo angle (e.g.
+        # -1.4e-14 deg, from a native sample stored as exactly 360.0 instead
+        # of 0.0) can round to exactly 360.0 rather than ~359.999999999986
+        # after `% 360.0`, since 360.0's float64 precision at that magnitude
+        # can't represent the difference. 360.0 and 0.0 are the same heading,
+        # so canonicalise to 0.0.
+        return np.where(angle >= 360.0, 0.0, angle)
     f = interp1d(t_in, v_use, kind="linear", bounds_error=False,
                  fill_value=(v_use[0], v_use[-1]))
     return f(t_out)
@@ -276,8 +301,10 @@ def _resample_vbox(vbox_df: pd.DataFrame, t_out: np.ndarray) -> dict[str, np.nda
         # huge outlier and corrupted into an erratic, wrong signal. Must be
         # excluded from despiking, same reasoning as `_NO_DESPIKE_SIGNALS`.
         despike = col != "heading_deg"
+        circular = col == "heading_deg"
         abs_threshold = _MAGNITUDE_GATED_SIGNALS.get(col)
-        out[col] = _resample_series(t_v, v, t_out, fs_in, despike=despike, abs_threshold=abs_threshold)
+        out[col] = _resample_series(t_v, v, t_out, fs_in, despike=despike,
+                                     abs_threshold=abs_threshold, circular=circular)
 
     # Label: nearest-neighbour (categorical)
     if "label" in vbox_df.columns:

@@ -145,10 +145,16 @@ _MAGNITUDE_GATED_SIGNALS = {"lat_acc_g": 3.0, "lon_acc_g": 3.0}
 
 
 def _resample_series(t_in: np.ndarray, v_in: np.ndarray, t_out: np.ndarray, fs_in: float,
-                      despike: bool = True, abs_threshold: float | None = None) -> np.ndarray:
+                      despike: bool = True, abs_threshold: float | None = None,
+                      circular: bool = False) -> np.ndarray:
     """Despike then linearly interpolate. Anti-alias lowpass only applied when
     genuinely downsampling (fs_in > FUSE_FS) — no native rate in this dataset
-    exceeds FUSE_FS, so this never fires, but is kept for correctness."""
+    exceeds FUSE_FS, so this never fires, but is kept for correctness.
+
+    circular=True interpolates v_in (a 0-360 degree angle) via its unit-
+    vector (cos, sin) components so a genuine 0/360 wrap crossing
+    interpolates the short way around instead of through the raw-value
+    false gap (heading_deg only)."""
     mask = np.isfinite(v_in)
     t_in, v_in = t_in[mask], v_in[mask]
     if len(t_in) < 4:
@@ -158,6 +164,18 @@ def _resample_series(t_in: np.ndarray, v_in: np.ndarray, t_out: np.ndarray, fs_i
         v_use = _lowpass(v_despiked, fs_in, cutoff=min(1.9, FUSE_FS / 2.0 * 0.9))
     else:
         v_use = v_despiked
+    if circular:
+        theta = np.radians(v_use)
+        cos_t, sin_t = np.cos(theta), np.sin(theta)
+        fc = interp1d(t_in, cos_t, kind="linear", bounds_error=False,
+                      fill_value=(cos_t[0], cos_t[-1]))
+        fs_ = interp1d(t_in, sin_t, kind="linear", bounds_error=False,
+                       fill_value=(sin_t[0], sin_t[-1]))
+        angle = np.degrees(np.arctan2(fs_(t_out), fc(t_out))) % 360.0
+        # Guard a float64 edge case: see fuse_stage1.py's _resample_series
+        # for the exact mechanism (a tiny negative pre-modulo angle can round
+        # to exactly 360.0 rather than ~359.999999999986). Canonicalise to 0.0.
+        return np.where(angle >= 360.0, 0.0, angle)
     f = interp1d(t_in, v_use, kind="linear", bounds_error=False,
                  fill_value=(v_use[0], v_use[-1]))
     return f(t_out)
@@ -231,8 +249,10 @@ def _resample_vbox(vbox_df: pd.DataFrame, t_out: np.ndarray) -> dict[str, np.nda
         # heading_deg is circular (0 == 360); Hampel despiking's raw numeric
         # differences don't know about wraparound, so it must be excluded.
         despike = col != "heading_deg"
+        circular = col == "heading_deg"
         abs_threshold = _MAGNITUDE_GATED_SIGNALS.get(col)
-        out[col] = _resample_series(t_v, v, t_out, fs_in, despike=despike, abs_threshold=abs_threshold)
+        out[col] = _resample_series(t_v, v, t_out, fs_in, despike=despike,
+                                     abs_threshold=abs_threshold, circular=circular)
     if "label" in vbox_df.columns:
         labels = vbox_df["label"].to_numpy()
         idx = np.clip(np.searchsorted(t_v, t_out, side="left"), 0, len(t_v) - 1)
