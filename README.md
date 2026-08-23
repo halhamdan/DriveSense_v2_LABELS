@@ -46,6 +46,17 @@ corresponding manuscript numbers/figures for anyone who has downloaded the publi
                              density figures, and the equipment diagram (Data Overview; Technical
                              Validation)
 _paths.py                   Shared staging-directory path constants (env-var based, see below)
+tutorial_load_and_split.py  Worked usage example over the RELEASED dataset (not the construction
+                             pipeline above): load a session, apply documented QC masks, align the
+                             facial/pose modalities, build a leave-one-driver-out split with a
+                             leakage check. Run directly: `python tutorial_load_and_split.py
+                             --dataset-root /path/to/Published_Dataset_Final`.
+MODEL_CARD.md                Facial-expression and pose model documentation: versions, known
+                             detection-failure behaviour, and documented general limitations of
+                             these model families (demographic/skin-tone accuracy disparities in
+                             FER-style models, occlusion/loose-clothing sensitivity in pose models),
+                             with the caveats this dataset's own stratified checks did and didn't
+                             establish.
 ```
 
 Each script's own docstring documents what it does and which manuscript section it supports.

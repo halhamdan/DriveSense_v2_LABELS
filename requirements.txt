@@ -2,6 +2,7 @@
 numpy
 pandas
 scipy
+scikit-learn               # tutorial_load_and_split.py (LeaveOneGroupOut)
 
 # Video / image processing
 opencv-python
