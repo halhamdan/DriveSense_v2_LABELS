@@ -185,18 +185,26 @@
         },
         "SCR_FREQ": {
           "dtype": "float64",
-          "unit": "events (rate)",
-          "description": "Skin-conductance-response frequency."
+          "unit": "events/min",
+          "description": "Skin-conductance-response frequency as computed on the device: count of detected phasic EDA events per minute (manufacturer definition). Preferred channel for SCR rate; the rate reconstructed from SCR_AMPLITUDE events agrees in rank order across sessions (Spearman 0.96) but is ~1.7x higher in absolute terms because the device's windowed count differs."
         },
         "SCR_AMPLITUDE": {
           "dtype": "float64 (nullable)",
           "unit": "uS",
-          "description": "Skin-conductance-response amplitude, one value per detected phasic EDA event; event-triggered like HR/IBI, so resampled the same gap-aware way (NaN where SCR_AMPLITUDE_dropout_flag is true, i.e. no SCR detected within the gap-aware window rather than a real zero). 11.93% of released rows have a present value dataset-wide (a property of the underlying event rate, not data loss -- most of the 25 Hz timeline naturally falls between discrete SCR events). Present values are heavily right-skewed (median 0.0005uS); a small tail is implausible for a skin-conductance response (<0.05% of present values exceed 100uS, up to a 9956uS maximum), consistent with the same class of isolated sensor-artefact tail already disclosed for lat_acc_g/lon_acc_g and confirmed present in the raw device export, not introduced by processing. Added 2026-09-09 (previously present in the raw EmotiBit export but not recognised by the fusion pipeline's channel table; see changelog)."
+          "description": "Skin-conductance-response amplitude: the device's onset-to-peak EDA change (uS), one value per detected phasic EDA event; event-triggered like HR/IBI, so resampled gap-aware (linear within native gaps <= 3 s, NaN where SCR_AMPLITUDE_dropout_flag is true). Validated against the EDA channel (Technical Validation, audit_scr_channels.py): events >= 0.01 uS coincide with a measurable EDA rise in 99.6% of cases (63.5% at control offsets) and amplitude tracks the measured rise (Spearman 0.76), but is ~3.8x smaller than a trough-to-peak measurement on EDA -- use as a relative index and apply an amplitude threshold (median event amplitude is 0.0005 uS; 26.5% of events >= 0.01 uS). Plausible range 0-50 uS (cannot exceed the EDA range); 0.048% of present values exceed 100 uS (isolated device artefacts, present in the raw export).",
+          "range": [
+            0,
+            50
+          ]
         },
         "SCR_RISE_TIME": {
           "dtype": "float64 (nullable)",
           "unit": "s",
-          "description": "Skin-conductance-response rise time, one value per detected phasic EDA event; same event-triggered resampling and dropout-flag treatment as SCR_AMPLITUDE, and the same 11.93% present-row rate (both are properties of the same detected events). Present values are physiologically plausible throughout (0.067-3.21s, median 0.26s); no implausible tail observed. Added 2026-09-09, same provenance as SCR_AMPLITUDE."
+          "description": "Skin-conductance-response rise time: the device's onset-to-peak time (s), one value per detected phasic EDA event; same event-triggered resampling and dropout-flag treatment as SCR_AMPLITUDE. Median 0.26 s, 95% below 0.83 s, maximum 2.5 s -- shorter than classical SCR rise times because of the device's onset/peak definitions. Plausible range 0-5 s.",
+          "range": [
+            0,
+            5
+          ]
         },
         "IBI": {
           "dtype": "float64 (nullable)",
@@ -477,6 +485,10 @@
     {
       "date": "2026-09-09",
       "change": "EmotiBit-to-VBOX time alignment model changed from a fitted linear calibration (anchor + clock-rate slope, 2026-09-09 morning) to an anchor-only calibration (slope fixed at exactly 1, session-median offset over all logged sync pings). Reason: the sync-ping logs show the device clock is stable to a few ppm within a session (median true drift ~4 ppm), but 12 of 79 sessions contain one or more discrete offset steps of 0.15-1.0 s (most plausibly host-clock adjustments on the logging laptop). A fitted slope cannot represent a step: it tilts through it, reports a spurious clock-rate error of up to several hundred ppm (D4_S1 +552, D4_S4 +295, D13_S1 -344 ppm), and smears the step across the whole session, misplacing the session end by up to ~1 s. The session-median offset is insensitive to such steps; the largest sustained step per session is the honest bound on residual cross-device alignment error and is released per session in the regeneration report. Only EmotiBit-derived columns changed; unix_time, elapsed_s, all VBOX/GPS columns and label are byte-identical. Previous files preserved at Preprocessed_Dataset_PRE_ANCHOR_ONLY_FIX_BACKUP/."
+    },
+    {
+      "date": "2026-09-09",
+      "change": "SCR_AMPLITUDE and SCR_RISE_TIME validated against the EDA channel (audit_scr_channels.py) and given plausible ranges (0-50 uS, 0-5 s) and precise manufacturer-based definitions; SCR_FREQ unit set to events/min. No data changed."
     }
   ]
 }
