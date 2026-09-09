@@ -69,6 +69,7 @@ needs:
 | Variable | What it points to | Used by |
 |---|---|---|
 | `DATASET_ROOT` | Root of the **released** dataset (containing `Raw_Dataset/` and `Preprocessed_Dataset/`) | `05_technical_validation/*`, `06_figures/*`, `04_session_trimming/regenerate_metadata.py`, `03_video_deidentification/verify_deidentification.py` |
+| `DATASET_RAW_DIR` | Full, **untrimmed** native per-session CSVs (`D{driver}_S{session}.csv`, pre-annotation, pre-fusion) -- distinct from `DATASET_ROOT`'s already-trimmed `Raw_Dataset/` tier | `01_annotation/label_harsh_events.py`, `05_technical_validation/make_priority_overlap_check.py` |
 | `STAGING_LABELED_DIR` | Pre-publication dir of `D{driver}_S{session}_LABELED.csv` (raw telemetry + GPS + label, output of stage `01`) | `01_annotation`, `04_session_trimming/*` |
 | `STAGING_FUSED_DIR` | Pre-publication dir of fused per-session output (output of stage `02`, before trimming) | `02_dataset_construction/*`, `04_session_trimming/*` |
 | `STAGING_DATA_ROOT` | Pre-publication root containing each driver's raw EmotiBit + VBOX video folders | `02_dataset_construction/prepare_dataset.py`, `04_session_trimming/*` |
@@ -122,14 +123,26 @@ needs:
 
 5. **`05_technical_validation/`** — `check_video_telemetry_sync.py` and
    `make_framedrop_check.py` are the checks behind the Technical Validation section's video
-   and cross-modal timing claims. `make_multimodal_completeness_check.py` is behind
+   and cross-modal timing claims. `make_full_video_decode_audit.py` extends the fast
+   container-metadata frame-completeness check to a full per-frame decode of all 153
+   released video files, confirming zero decode errors, non-monotonic timestamps or
+   duplicate frames dataset-wide ("Video and pose completeness"). `make_multimodal_completeness_check.py` is behind
    "Multimodal completeness around harsh events": for each released discrete harsh event, the
    fraction with valid (non-dropout/non-missing) physiology, facial and cabin-pose data
    available during the event window. `make_route_and_channel_checks.py` is behind "Route
    consistency" (per-session GPS bounding box and total driven distance, verifying every
    session followed the same fixed route) and the `engine_rpm`/thermopile-temperature
    plausible-range checks in the telemetry-anomaly table and physiological-signal section.
-   `make_availability_table.py` generates the released
+   `make_priority_overlap_check.py` reproduces the harsh-event mask logic from
+   `01_annotation/label_harsh_events.py`, run on the full untrimmed native per-session CSVs
+   (requires `DATASET_RAW_DIR`, not just `DATASET_ROOT` -- see below; running it on the
+   trimmed `fused.csv` instead gives wrong, internally-contradictory results, since clipping
+   first starves the rolling-window calculations of context at the boundary), to quantify,
+   before the fixed Turning > Braking > Acceleration priority order is applied, how many
+   samples each higher-priority class relabels away from a lower-priority one (Methods,
+   "harsh-event annotation").
+   `make_ppg_saturation_check.py` is behind "Physiological signal characterisation"'s PPG
+   photodetector-saturation check. `make_availability_table.py` generates the released
    Supplementary Table S1 (per-driver, per-session data availability).
 
 6. **`06_figures/`** — `make_technical_validation_figures.py` produces the class-distribution
@@ -182,6 +195,30 @@ See `requirements.txt`. Additionally:
   repository due to its size).
 - A CUDA-capable GPU is recommended but not required for `torch`/`facenet-pytorch`/`deepface`
   steps; they fall back to CPU.
+
+## Reproducing and interpreting the release
+
+- **`MANUAL_EXCEPTIONS.md`** lists, in one place, every session- or channel-level decision that
+  cannot be inferred from the files: excluded/partial sessions, the eight face exposures found
+  and corrected, researcher masking, removed/special-cased channels, timing and
+  synchronisation decisions, and known outliers left as-is. The same facts are carried per
+  session in the released `dataset_metadata.json` (`sessions[*].exceptions`, `sessions[*].sync`),
+  written by `05_technical_validation/add_session_provenance.py`.
+- **`02_dataset_construction/regen_v2/`** is the pipeline that produced the released biometric
+  columns as of 2026-09-09 (`regenerate_fused_v2.py` with `SYNC_MODEL=anchor_only`, writing to a
+  separate tree; `deploy_regen_v3.py` verifies non-biometric columns are byte-identical, backs
+  up, copies, re-hashes `manifest.csv` and appends the `data_schema.json` changelog).
+  `timesync_calibration.py` documents both the released anchor-only model and the superseded
+  fitted-slope model, and why.
+- **`05_technical_validation/audit_*.py`** are the pre-submission audit scripts (label
+  reproducibility, acceleration artefacts, synchronisation evidence, physiological quality);
+  `make_physio_quality_table.py` builds Supplementary Table S2 from the physiological-quality
+  audit.
+- **`tutorial_load_and_split.py`** is the one-session worked example: it loads a session, applies
+  the documented QC masks and the Supplementary-Table-S2 session screens, aligns the facial and
+  pose files onto the 25 Hz grid, and builds a leakage-free leave-one-driver-out split.
+- `requirements.txt` pins the versions used to produce the released files and the manuscript's
+  Technical Validation numbers.
 
 ## Known limitations of this release
 

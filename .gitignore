@@ -21,3 +21,6 @@ Thumbs.db
 # Editor
 .idea/
 .vscode/
+
+# Companion sensitivity-check outputs (generated; see regen_v2/precursor_sensitivity_check.py)
+*/regen_v2/precursor_sensitivity_output*/

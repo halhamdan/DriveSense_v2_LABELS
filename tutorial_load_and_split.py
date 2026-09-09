@@ -33,6 +33,25 @@ def load_session(dataset_root: Path, driver: str, session: int) -> pd.DataFrame:
     fused["HR_valid"] = ~fused["HR_dropout_flag"].astype(bool)
     fused["EDA_valid"] = fused["EDA"].between(0, 50)
     fused["accel_valid"] = fused["lat_acc_g"].between(-1.2, 1.2) & fused["lon_acc_g"].between(-1.2, 1.2)
+    # SCR_AMPLITUDE / SCR_RISE_TIME are event-triggered (one value per detected
+    # skin-conductance response, ~12% of rows dataset-wide): a row with the
+    # dropout flag set simply means "no SCR event here", not a sensor fault.
+    fused["SCR_event_present"] = ~fused["SCR_AMPLITUDE_dropout_flag"].astype(bool)
+
+    # Session-level screens suggested in Technical Validation / Supplementary
+    # Table S2: treat EDA/SCR as usable only if <30% of the session's EDA
+    # samples sit in flatline runs (>=10 identical consecutive samples, i.e.
+    # 0.4 s at 25 Hz -- a contact-loss signature), and HR/IBI as usable only
+    # if <30% of rows are dropout-flagged. Both are printed, not enforced.
+    same = fused["EDA"].eq(fused["EDA"].shift())
+    run_id = (~same).cumsum()
+    run_len = same.groupby(run_id).transform("size")
+    eda_flatline_pct = float(((run_len >= 10) & fused["EDA"].notna()).mean() * 100)
+    hr_dropout_pct = float((~fused["HR_valid"]).mean() * 100)
+    print(f"  {tag}: EDA flatline {eda_flatline_pct:.1f}% "
+          f"({'usable' if eda_flatline_pct < 30 else 'SCREEN OUT'}), "
+          f"HR/IBI dropout {hr_dropout_pct:.1f}% "
+          f"({'usable' if hr_dropout_pct < 30 else 'SCREEN OUT'})")
 
     for name, fp in [("Front_emotions", sess_dir / f"{tag}_Front_emotions.csv"),
                       ("Side_pose", sess_dir / f"{tag}_Side_pose.csv")]:

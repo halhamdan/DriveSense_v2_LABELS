@@ -1,12 +1,15 @@
-# Core
-numpy
-pandas
-scipy
-scikit-learn               # tutorial_load_and_split.py (LeaveOneGroupOut)
+# Core -- versions are those used for the released files and the Technical
+# Validation numbers (Python 3.13.x). Later minor versions should work; these
+# are pinned so the manuscript's figures/tables can be reproduced exactly.
+numpy==2.4.5
+pandas==3.0.3
+scipy==1.17.1
+scikit-learn==1.8.0        # tutorial_load_and_split.py (LeaveOneGroupOut)
+statsmodels==0.15.0        # companion sensitivity check (regen_v2/precursor_sensitivity_check.py)
 
 # Video / image processing
-opencv-python
-Pillow
+opencv-python==4.13.0.92
+Pillow==12.2.0
 
 # Face detection (video de-identification, verification audit)
 facenet-pytorch==2.6.0
@@ -23,9 +26,9 @@ tensorflow==2.21.0
 mediapipe==0.10.35       # Pose Landmarker task API, model: pose_landmarker_lite.task
 
 # Figures
-matplotlib
-seaborn
-contextily                # route map basemap tiles (make_route_map_figure.py)
+matplotlib==3.10.9
+seaborn==0.13.2
+contextily                # route map basemap tiles (make_route_map_figure.py); any recent version
 
 # External binary dependency (not pip-installable): ffmpeg / ffprobe must be
 # on PATH, or pointed to via the FFMPEG / FFPROBE environment variables.

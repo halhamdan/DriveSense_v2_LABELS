@@ -1,0 +1,482 @@
+{
+  "schema_version": "1.0",
+  "generated": "2026-09-09",
+  "description": "Column-level typed data dictionary for the DriveSense Preprocessed_Dataset tier's per-session CSV files. All timestamped fields use unix_time (absolute, UTC epoch seconds) as the primary time reference; elapsed_s and per-file frame/timestamp_s columns are session- or video-relative.",
+  "files": {
+    "{tag}_fused.csv": {
+      "description": "Vehicle telemetry and physiological channels aligned to a common 25 Hz timeline, one row per timestep.",
+      "rows_total_released": 3504071,
+      "columns": {
+        "driver": {
+          "dtype": "int",
+          "unit": null,
+          "description": "Driver ID, 1-20."
+        },
+        "session": {
+          "dtype": "int",
+          "unit": null,
+          "description": "Session number, 1-4."
+        },
+        "unix_time": {
+          "dtype": "float64",
+          "unit": "s (UTC epoch)",
+          "description": "Absolute timestamp, primary time reference."
+        },
+        "elapsed_s": {
+          "dtype": "float64",
+          "unit": "s",
+          "description": "Seconds from the start of the released (trimmed) window, 0-based."
+        },
+        "gps_speed_kmh": {
+          "dtype": "float64",
+          "unit": "km/h",
+          "range": [
+            0,
+            250
+          ],
+          "description": "GNSS-derived speed."
+        },
+        "speed_kph": {
+          "dtype": "float64",
+          "unit": "km/h",
+          "range": [
+            0,
+            250
+          ],
+          "description": "CAN/wheel-derived indicated vehicle speed."
+        },
+        "engine_rpm": {
+          "dtype": "float64",
+          "unit": "rpm",
+          "range": [
+            0,
+            6500
+          ],
+          "description": "Engine speed."
+        },
+        "throttle_pct": {
+          "dtype": "float64",
+          "unit": "%",
+          "range": [
+            0,
+            100
+          ],
+          "description": "Accelerator pedal position."
+        },
+        "lat_acc_g": {
+          "dtype": "float64",
+          "unit": "g",
+          "range": [
+            -1.2,
+            1.2
+          ],
+          "description": "Lateral acceleration; used directly for the Harsh Turning threshold. Values outside the plausible range are rare (0.04% dataset-wide, combined with lon_acc_g); most show a smooth multi-sample rise-and-decay pattern consistent with a genuine pothole/bump response, but a minority show a rapidly alternating multi-sign pattern more consistent with an unresolved multi-sample sensor artefact that isolated-glitch removal cannot safely catch without also risking genuine short harsh events (Technical Validation). Despiking is magnitude-gated (only a statistical outlier that also exceeds 3g is treated as a glitch) specifically to avoid attenuating real event peaks."
+        },
+        "lon_acc_g": {
+          "dtype": "float64",
+          "unit": "g",
+          "range": [
+            -1.2,
+            1.2
+          ],
+          "description": "Longitudinal acceleration; used directly for the Harsh Braking/Acceleration thresholds. Same caveats as lat_acc_g."
+        },
+        "gradient_pct": {
+          "dtype": "float64",
+          "unit": "%",
+          "range": [
+            -30,
+            30
+          ],
+          "description": "Road gradient estimate; not used in harsh-event thresholds (Technical Validation). 0.30% implausible-value rate, disclosed."
+        },
+        "heading_deg": {
+          "dtype": "float64",
+          "unit": "deg",
+          "range": [
+            0,
+            360
+          ],
+          "description": "Vehicle heading. Small (0.11%) artefact from linear (not circular) interpolation across the 0/360 wrap boundary; not used in any harsh-event threshold. Deliberately excluded from despiking (Technical Validation) since it is a circular quantity."
+        },
+        "height_m": {
+          "dtype": "float64",
+          "unit": "m",
+          "range": [
+            550,
+            800
+          ],
+          "description": "GNSS-derived elevation. Route-specific plausible range (not used in any harsh-event threshold); 0.0067% of samples fall outside it, almost entirely session D10_S1, which has a smooth ~0.4s GNSS altitude-solution excursion up to 1060m -- not affected by despiking since it is a gradual multi-sample ramp, not an isolated spike (Technical Validation)."
+        },
+        "wheel_fr_kph": {
+          "dtype": "float64",
+          "unit": "km/h",
+          "description": "Front-right wheel speed."
+        },
+        "wheel_fl_kph": {
+          "dtype": "float64",
+          "unit": "km/h",
+          "description": "Front-left wheel speed."
+        },
+        "label": {
+          "dtype": "str (categorical)",
+          "values": [
+            "Normal",
+            "Harsh Acceleration",
+            "Harsh Braking",
+            "Harsh Turning"
+          ],
+          "description": "Deterministic, threshold-derived vehicle-dynamics label. Computed once on native-resolution raw telemetry (Methods); carried through resampling by nearest-neighbour lookup, never recomputed from the resampled/despiked continuous channels above."
+        },
+        "EDA": {
+          "dtype": "float64",
+          "unit": "uS",
+          "range": [
+            0,
+            50
+          ],
+          "description": "Electrodermal activity. 5.61% implausible-value rate dataset-wide; 10 of 79 sessions have >30% flatline samples (contact-loss, disclosed in Technical Validation)."
+        },
+        "EDA_LEVEL": {
+          "dtype": "float64",
+          "unit": "ADC units (baseline-relative)",
+          "description": "EmotiBit derived EDA baseline-level channel."
+        },
+        "TEMP_CONTACT": {
+          "dtype": "float64",
+          "unit": "deg C",
+          "range": [
+            20,
+            45
+          ],
+          "description": "Skin-contact temperature. Clean (0.00% implausible)."
+        },
+        "TEMP_THERMOPILE": {
+          "dtype": "float64",
+          "unit": "deg C",
+          "description": "Non-contact (thermopile) temperature."
+        },
+        "PPG_IR": {
+          "dtype": "float64",
+          "unit": "raw ADC counts",
+          "range": [
+            0,
+            null
+          ],
+          "description": "Infrared photoplethysmography. Non-negativity (a physical requirement of raw photodetector output) validated: 0.00% negative values dataset-wide (Technical Validation)."
+        },
+        "PPG_RED": {
+          "dtype": "float64",
+          "unit": "raw ADC counts",
+          "range": [
+            0,
+            null
+          ],
+          "description": "Red photoplethysmography. Same non-negativity validation as PPG_IR; typical magnitude below PPG_IR, consistent with known PPG wavelength-dependent tissue response."
+        },
+        "PPG_GREEN": {
+          "dtype": "float64",
+          "unit": "raw ADC counts",
+          "range": [
+            0,
+            null
+          ],
+          "description": "Green photoplethysmography. Same non-negativity validation as PPG_IR; typical magnitude below PPG_RED, consistent with known PPG wavelength-dependent tissue response."
+        },
+        "SCR_FREQ": {
+          "dtype": "float64",
+          "unit": "events (rate)",
+          "description": "Skin-conductance-response frequency."
+        },
+        "SCR_AMPLITUDE": {
+          "dtype": "float64 (nullable)",
+          "unit": "uS",
+          "description": "Skin-conductance-response amplitude, one value per detected phasic EDA event; event-triggered like HR/IBI, so resampled the same gap-aware way (NaN where SCR_AMPLITUDE_dropout_flag is true, i.e. no SCR detected within the gap-aware window rather than a real zero). 11.93% of released rows have a present value dataset-wide (a property of the underlying event rate, not data loss -- most of the 25 Hz timeline naturally falls between discrete SCR events). Present values are heavily right-skewed (median 0.0005uS); a small tail is implausible for a skin-conductance response (<0.05% of present values exceed 100uS, up to a 9956uS maximum), consistent with the same class of isolated sensor-artefact tail already disclosed for lat_acc_g/lon_acc_g and confirmed present in the raw device export, not introduced by processing. Added 2026-09-09 (previously present in the raw EmotiBit export but not recognised by the fusion pipeline's channel table; see changelog)."
+        },
+        "SCR_RISE_TIME": {
+          "dtype": "float64 (nullable)",
+          "unit": "s",
+          "description": "Skin-conductance-response rise time, one value per detected phasic EDA event; same event-triggered resampling and dropout-flag treatment as SCR_AMPLITUDE, and the same 11.93% present-row rate (both are properties of the same detected events). Present values are physiologically plausible throughout (0.067-3.21s, median 0.26s); no implausible tail observed. Added 2026-09-09, same provenance as SCR_AMPLITUDE."
+        },
+        "IBI": {
+          "dtype": "float64 (nullable)",
+          "unit": "ms",
+          "range": [
+            300,
+            1500
+          ],
+          "description": "Inter-beat interval. NaN where IBI_dropout_flag is true (see that column). Of non-missing values, 24.34% still fall outside the plausible range -- a genuine PPG beat-detection characteristic, not an interpolation artefact (Technical Validation). Dropout rate varies substantially by session (1.3-61.2%, mean 16.9%); 12 of 79 sessions exceed 30% dropout, spanning 8 drivers."
+        },
+        "HR": {
+          "dtype": "float64 (nullable)",
+          "unit": "bpm",
+          "range": [
+            40,
+            200
+          ],
+          "description": "Heart rate. NaN where HR_dropout_flag is true. 1.92% implausible-value rate among non-missing values. Same per-session dropout distribution as IBI (both derived from the same PPG signal, on-device)."
+        },
+        "ACC_x": {
+          "dtype": "float64",
+          "unit": "g",
+          "range": [
+            -8,
+            8
+          ],
+          "description": "Wrist-worn accelerometer, x-axis. Range is the device's own configured hardware range; 0.00% of released samples fall outside it (Technical Validation)."
+        },
+        "ACC_y": {
+          "dtype": "float64",
+          "unit": "g",
+          "range": [
+            -8,
+            8
+          ],
+          "description": "Wrist-worn accelerometer, y-axis. Same hardware-range validation as ACC_x."
+        },
+        "ACC_z": {
+          "dtype": "float64",
+          "unit": "g",
+          "range": [
+            -8,
+            8
+          ],
+          "description": "Wrist-worn accelerometer, z-axis. Same hardware-range validation as ACC_x."
+        },
+        "ACC_mag": {
+          "dtype": "float64",
+          "unit": "g",
+          "range": [
+            0,
+            13.86
+          ],
+          "description": "Accelerometer magnitude, sqrt(x^2+y^2+z^2). Upper bound is sqrt(3)*8g, the theoretical maximum if all three axes were simultaneously at their hardware range; 0.00% of released samples exceed it."
+        },
+        "GYRO_x": {
+          "dtype": "float64",
+          "unit": "deg/s",
+          "range": [
+            -1000,
+            1000
+          ],
+          "description": "Wrist-worn gyroscope, x-axis. Range is the device's own configured hardware range; 0.00% of released samples fall outside it (Technical Validation)."
+        },
+        "GYRO_y": {
+          "dtype": "float64",
+          "unit": "deg/s",
+          "range": [
+            -1000,
+            1000
+          ],
+          "description": "Wrist-worn gyroscope, y-axis. Same hardware-range validation as GYRO_x."
+        },
+        "GYRO_z": {
+          "dtype": "float64",
+          "unit": "deg/s",
+          "range": [
+            -1000,
+            1000
+          ],
+          "description": "Wrist-worn gyroscope, z-axis. Same hardware-range validation as GYRO_x."
+        },
+        "GYRO_mag": {
+          "dtype": "float64",
+          "unit": "deg/s",
+          "range": [
+            0,
+            1732
+          ],
+          "description": "Gyroscope magnitude. Upper bound is sqrt(3)*1000 deg/s; 0.00% of released samples exceed it."
+        },
+        "MAG_x": {
+          "dtype": "float64",
+          "unit": "uT",
+          "description": "Wrist-worn magnetometer, x-axis. No documented hardware range exists for this channel; reported descriptively (Technical Validation) rather than against a plausible-range threshold."
+        },
+        "MAG_y": {
+          "dtype": "float64",
+          "unit": "uT",
+          "description": "Wrist-worn magnetometer, y-axis. Same caveat as MAG_x."
+        },
+        "MAG_z": {
+          "dtype": "float64",
+          "unit": "uT",
+          "description": "Wrist-worn magnetometer, z-axis. Same caveat as MAG_x."
+        },
+        "MAG_mag": {
+          "dtype": "float64",
+          "unit": "uT",
+          "description": "Magnetometer magnitude. No documented hardware range; observed 0-277uT dataset-wide (median 71uT), consistent with a wrist-worn sensor near a vehicle's steel body/electronics rather than an undisturbed field, no outliers suggestive of sensor failure."
+        },
+        "HR_dropout_flag": {
+          "dtype": "bool",
+          "description": "True where this row's HR value is missing (NaN) because it falls inside a native beat-detection gap longer than 3 seconds (3x the 1 Hz native sampling period), rather than being a real measurement or a short-gap interpolation. Added in the 2026-08-21 fusion pipeline correction; not present in dataset versions predating that fix."
+        },
+        "IBI_dropout_flag": {
+          "dtype": "bool",
+          "description": "Same definition as HR_dropout_flag, applied to the IBI channel independently (the two can differ since HR and IBI are derived from the same PPG signal via separate on-device processing)."
+        },
+        "SCR_AMPLITUDE_dropout_flag": {
+          "dtype": "bool",
+          "description": "True where this row's SCR_AMPLITUDE value is missing (NaN) because no skin-conductance-response event was detected inside the gap-aware resampling window around this timestep -- same gap-aware definition as HR_dropout_flag/IBI_dropout_flag, applied to this event-triggered channel. True on 88.07% of released rows, reflecting the genuine inter-event spacing of phasic EDA responses, not a hardware or processing fault."
+        },
+        "SCR_RISE_TIME_dropout_flag": {
+          "dtype": "bool",
+          "description": "Same definition as SCR_AMPLITUDE_dropout_flag; identical to it row-for-row, since both describe the same detected SCR events."
+        }
+      }
+    },
+    "{tag}_Front_emotions.csv": {
+      "description": "Model-derived facial-expression confidence scores and face bounding box, one row per released front-camera video frame.",
+      "columns": {
+        "frame": {
+          "dtype": "int",
+          "description": "0-based frame index in the released (trimmed) Front_blurred.mp4."
+        },
+        "timestamp_s": {
+          "dtype": "float64",
+          "unit": "s",
+          "description": "frame / video frame rate."
+        },
+        "angry": {
+          "dtype": "float64",
+          "unit": "%",
+          "description": "DeepFace expression-confidence score."
+        },
+        "disgust": {
+          "dtype": "float64",
+          "unit": "%"
+        },
+        "fear": {
+          "dtype": "float64",
+          "unit": "%"
+        },
+        "happy": {
+          "dtype": "float64",
+          "unit": "%"
+        },
+        "neutral": {
+          "dtype": "float64",
+          "unit": "%"
+        },
+        "sad": {
+          "dtype": "float64",
+          "unit": "%"
+        },
+        "surprise": {
+          "dtype": "float64",
+          "unit": "%"
+        },
+        "dominant_emotion": {
+          "dtype": "str (categorical)",
+          "description": "argmax of the seven confidence scores."
+        },
+        "face_x": {
+          "dtype": "float64",
+          "unit": "px"
+        },
+        "face_y": {
+          "dtype": "float64",
+          "unit": "px"
+        },
+        "face_w": {
+          "dtype": "float64",
+          "unit": "px"
+        },
+        "face_h": {
+          "dtype": "float64",
+          "unit": "px"
+        }
+      }
+    },
+    "{tag}_Side_pose.csv": {
+      "description": "MediaPipe-derived upper-body pose keypoints and summary features, one row per sampled released side-camera video frame.",
+      "columns": {
+        "frame": {
+          "dtype": "int"
+        },
+        "timestamp_s": {
+          "dtype": "float64",
+          "unit": "s"
+        },
+        "pose_detected": {
+          "dtype": "bool"
+        },
+        "wrist_l_x": {
+          "dtype": "float64",
+          "unit": "normalised [0,1] frame fraction"
+        },
+        "wrist_l_y": {
+          "dtype": "float64",
+          "unit": "normalised [0,1] frame fraction"
+        },
+        "wrist_r_x": {
+          "dtype": "float64",
+          "unit": "normalised [0,1] frame fraction"
+        },
+        "wrist_r_y": {
+          "dtype": "float64",
+          "unit": "normalised [0,1] frame fraction"
+        },
+        "shoulder_l_x": {
+          "dtype": "float64",
+          "unit": "normalised [0,1] frame fraction"
+        },
+        "shoulder_l_y": {
+          "dtype": "float64",
+          "unit": "normalised [0,1] frame fraction"
+        },
+        "shoulder_r_x": {
+          "dtype": "float64",
+          "unit": "normalised [0,1] frame fraction"
+        },
+        "shoulder_r_y": {
+          "dtype": "float64",
+          "unit": "normalised [0,1] frame fraction"
+        },
+        "hands_on_wheel_proxy": {
+          "dtype": "float64",
+          "range": [
+            0,
+            1
+          ],
+          "description": "Fixed-region heuristic; sensitive to seating position and camera framing (Usage Notes)."
+        },
+        "posture_deviation": {
+          "dtype": "float64",
+          "description": "Non-negative deviation from a per-session baseline posture."
+        },
+        "motion_energy": {
+          "dtype": "float64",
+          "description": "Non-negative frame-to-frame motion summary; occasional large values are a known BlazePose occlusion-extrapolation artefact (Technical Validation)."
+        }
+      }
+    }
+  },
+  "changelog": [
+    {
+      "date": "2026-08-21",
+      "change": "Fusion pipeline (fuse_stage1.py) corrected: anti-alias filtering now applied only when a channel is genuinely downsampled (never the case in this release); added Hampel despiking for isolated sensor glitches on all channels except heading_deg (circular quantity) and HR/IBI (dropout signal, not noise); IBI/HR resampling made gap-aware (missing instead of interpolated across dropouts >3s) with new HR_dropout_flag/IBI_dropout_flag columns. All 79 released fused.csv files regenerated; deterministic harsh-event labels unchanged (byte-identical) throughout."
+    },
+    {
+      "date": "2026-08-22",
+      "change": "D9_S3_fused.csv specifically regenerated: this one session's EmotiBit source folder was empty in the primary staging root and only populated in a secondary backup root, which had caused an earlier regeneration pass to silently skip it (VBOX channels used an incorrect time reference, EmotiBit channels never received the 2026-08-21 despiking/gap-aware fix at all). Re-run through the standard, non-special-cased pipeline; row count, column set and deterministic labels unchanged from the previous release. Dataset-wide statistics reverified: telemetry implausible-value rates unchanged; HR implausible-value rate corrected from a stale 3.94% to the current 1.92% (pre-existing stale figure, not caused by the D9_S3 fix); IBI dropout/residual-implausible rates updated from 17.76%/24.37% to 17.80%/24.34%; EDA >30%-flatline driver count corrected from a stale 7 to the current 5 (10 sessions unchanged; also a pre-existing stale figure)."
+    },
+    {
+      "date": "2026-08-22",
+      "change": "lat_acc_g/lon_acc_g despiking corrected: a deterministic-oracle check (re-running the released harsh-event labelling algorithm directly on the despiked signal and comparing against released labels) found the 2026-08-21 despiking correction was still measurably attenuating genuine short harsh-event peaks, since a purely statistical local-outlier test cannot distinguish a real event's sharp onset from a glitch. lat_acc_g and lon_acc_g are now magnitude-gated: a statistical outlier in these two channels only counts as a glitch if it also exceeds 3g (documented plausible range +-1.2g; the motivating glitch was ~28g). This raised the released lateral/longitudinal-acceleration implausible-value rate from 0.02% (791 samples) to 0.04% (1,312 samples), since genuine larger excursions are no longer over-smoothed; manual inspection of this tail found it is not a single uniform phenomenon (see the revised lat_acc_g/lon_acc_g descriptions above) -- most show a genuine physical impact signature, but a minority show a pattern more consistent with an unresolved multi-sample sensor artefact that this correction cannot safely remove without also risking genuine events of similar duration; disclosed as an open limitation. All 79 released fused.csv files regenerated for these two columns only; row counts, all other columns, and deterministic harsh-event labels unchanged (byte-identical) throughout."
+    },
+    {
+      "date": "2026-08-22",
+      "change": "Extended technical validation to previously-unchecked channels (no data changed, disclosure/schema only): ACC/GYRO validated against the device's own hardware range (0.00% outside +-8g / +-1000deg/s); PPG_IR/RED/GREEN validated for non-negativity (0.00% negative); MAG reported descriptively (no documented hardware range). height_m given a route-specific plausible range (550-800m); found and disclosed a genuine GNSS altitude-solution excursion in D10_S1 (smooth ~0.4s ramp to 1060m, not caught by despiking since it is not an isolated spike -- likely a major contributor to the already-disclosed gradient_pct implausible tail). GNSS lat/lon (Raw_Dataset) validated against a Riyadh-area bounding box: 100% within bounds. Added per-session IBI/HR dropout-rate breakdown (previously only a dataset-wide aggregate existed): 12/79 sessions exceed 30% dropout, spanning 8 drivers. Added a direct perturbation test: clipping the lat_acc_g/lon_acc_g implausible tail to +-1.2g and re-running the labelling algorithm changes zero labels across all 3,504,071 timesteps and all 79 sessions. Added session-level bias/limits-of-agreement for GPS-vs-CAN speed and front-left/right wheel speed (previously only a single dataset-wide correlation coefficient was reported); identified D17_S2 as a clear session-level outlier (same session as the already-disclosed 28g glitch)."
+    },
+    {
+      "date": "2026-09-09",
+      "change": "EmotiBit-to-VBOX absolute-time anchor corrected, and two previously-uncaptured channels (SCR_AMPLITUDE, SCR_RISE_TIME) added. Root cause: the fusion pipeline's EmotiBit absolute-time anchor was parsed from the recording-start filename at whole-second resolution only, even though the underlying filenames carry a microsecond-resolution suffix the parser never used; separately, only 1 of 79 sessions had ever received an EmotiBit-side clock-rate calibration file (timeSyncMap.csv/timesyncs.csv), so every other session's timeline advanced, uncorrected, from a single approximate start-time anchor for its full duration. Fix: a robust linear calibration fit across every individual NTP-style sync ping logged throughout each session (not just the collapsed 2-point map), now available for all 79 valid sessions; falls back to the original filename anchor only where a session's device-side calibration log is itself absent (0 of 79 sessions, after re-export). Also fixed a session-file-pairing bug found during this correction: 4 sessions (D1_S1, D3_S2, D4_S1, D16_S3) have TWO raw EmotiBit recording files each (a brief aborted connection attempt followed shortly after by the real full-length recording); the corrected pipeline pairs each session's calibration data with its own chosen (largest) recording file explicitly, rather than an unordered filesystem match that could silently calibrate against the wrong (aborted) recording's few seconds of data. Measured effect: the corrected anchor is +0.7 to +1.9s (mean +1.16s) later than the previous release's anchor, consistently across sessions (not random per-session noise); dataset-wide, 3 of 240 precursor-analysis significance tests (Benjamini-Hochberg FDR, matched-pairs design) change significance status under this correction, all three involving IBI or IBI-derived HRV_RMSSD (the most timing-sensitive channels at short lead times); none of the companion analysis's SCR-frequency findings are affected. SCR_AMPLITUDE and SCR_RISE_TIME (skin-conductance-response amplitude and rise time) were present in the raw EmotiBit export for every session but never recognised by the fusion pipeline's channel table; both are now captured with the same gap-aware, event-triggered resampling treatment as HR/IBI (see column descriptions above). Row counts, VBOX/GPS/label columns, and every other previously-released column are unchanged (verified byte-identical) across all 79 sessions; only the physiological columns' exact values shift with the corrected timing, and 4 new columns are added. Previous release preserved at Preprocessed_Dataset_PRE_EMOTIBIT_SYNC_FIX_BACKUP/."
+    },
+    {
+      "date": "2026-09-09",
+      "change": "EmotiBit-to-VBOX time alignment model changed from a fitted linear calibration (anchor + clock-rate slope, 2026-09-09 morning) to an anchor-only calibration (slope fixed at exactly 1, session-median offset over all logged sync pings). Reason: the sync-ping logs show the device clock is stable to a few ppm within a session (median true drift ~4 ppm), but 12 of 79 sessions contain one or more discrete offset steps of 0.15-1.0 s (most plausibly host-clock adjustments on the logging laptop). A fitted slope cannot represent a step: it tilts through it, reports a spurious clock-rate error of up to several hundred ppm (D4_S1 +552, D4_S4 +295, D13_S1 -344 ppm), and smears the step across the whole session, misplacing the session end by up to ~1 s. The session-median offset is insensitive to such steps; the largest sustained step per session is the honest bound on residual cross-device alignment error and is released per session in the regeneration report. Only EmotiBit-derived columns changed; unix_time, elapsed_s, all VBOX/GPS columns and label are byte-identical. Previous files preserved at Preprocessed_Dataset_PRE_ANCHOR_ONLY_FIX_BACKUP/."
+    }
+  ]
+}

@@ -13,25 +13,33 @@ release to replace that spot check with actual evidence across all sessions.
 IMPORTANT -- why this checks sharpness, not just detection: an early version
 of this script flagged any MTCNN detection above a confidence threshold as a
 "residual face," which produced enormous false-positive counts (tens of
-thousands per session). Visual inspection of the very first flagged frame in
-D1_S1_Front showed why: MTCNN readily fires on a driver's HAND on the
-steering wheel (skin-toned, roughly oval) at 0.92 confidence, while correctly
-NOT firing on the actually-blurred face right next to it. Measuring Laplacian
-variance (a standard local-sharpness/blur metric) inside both boxes on that
-frame confirmed the separation: the blurred face region measured ~62, a
-sharp reference background region measured ~182, and the false-positive hand
-box measured ~204. A detection is therefore only counted as a genuine
-residual face if the sharpness inside its box exceeds --sharpness-threshold
-(default 120, comfortably above the observed blur level and below sharp
-skin/background) -- this distinguishes "MTCNN detected a face-shaped blur"
-(expected, harmless) from "MTCNN detected a face-shaped SHARP region"
-(the actual failure mode worth flagging).
+thousands per session). Visual inspection showed why: MTCNN readily fires on
+a driver's HAND on the steering wheel, small reflective objects (e.g. a side-
+mirror sticker), and background clutter through windows, while correctly NOT
+firing on the actually-blurred face right next to them.
 
-This threshold was calibrated on one frame from one session. Before trusting
-it across the full dataset, spot-check a handful of --dump-flagged-frames
-output images (see below) to confirm they show genuine unblurred faces, not
-another false-positive category (e.g. a sharp ear or hairline right at a
-blur-region edge) -- adjust --sharpness-threshold if needed.
+A second calibration round (see manuscript Technical Validation) found the
+first fix -- raw Laplacian variance inside the box, threshold 120 -- was
+itself unreliable: released video is H.264-encoded, and macroblock
+compression artefacts inside smooth (Gaussian-blurred) regions inflate raw
+Laplacian variance enough to misflag genuinely, visibly blurred faces as
+"sharp" (observed 125-245 on faces with no recoverable detail). The metric
+now pre-smooths each candidate box with a small Gaussian blur before
+computing Laplacian variance, which suppresses compression-block edges while
+still responding to genuine fine facial detail (eyes/nose/mouth) if a face
+were actually unblurred. Recalibrated across three sessions spanning both
+camera views (D1_S1_Front, D15_S1_Front, D18_S4_Side -- the last being the
+session with a previously-confirmed real exposure, since corrected), every
+visually-inspected flagged detection was still a false positive (hand,
+mirror decal, window clutter) with the highest observed score 245;
+--sharpness-threshold defaults to 300 accordingly, comfortably above every
+false positive observed so far.
+
+This calibration is still based on a limited sample without a confirmed
+true-positive example to validate sensitivity against. Before trusting a
+full run, spot-check a handful of --dump-flagged-frames output images (see
+below) to confirm they show genuine unblurred faces, not another
+false-positive category -- adjust --sharpness-threshold if needed.
 
 Output is written incrementally (one row appended per session-camera file
 processed), since a full run is many hours -- an interruption partway
@@ -110,7 +118,8 @@ except ImportError:
 
 
 DEFAULT_MIN_CONF = 0.90        # deliberately stricter than the blurring pass's own 0.7-0.85 thresholds
-DEFAULT_SHARPNESS_THRESHOLD = 120.0  # see calibration note in the module docstring
+DEFAULT_SHARPNESS_THRESHOLD = 300.0  # see calibration note in the module docstring
+PRESMOOTH_KSIZE = 5  # Gaussian pre-smoothing kernel, suppresses H.264 macroblock artefacts
 BATCH_SIZE = 32  # only used for the facenet_pytorch/MTCNN path
 
 
@@ -120,9 +129,13 @@ def box_sharpness(gray: np.ndarray, box) -> float:
     x1, y1 = max(0, x1), max(0, y1)
     x2, y2 = min(w, x2), min(h, y2)
     patch = gray[y1:y2, x1:x2]
-    if patch.size == 0:
-        return 0.0
-    return float(cv2.Laplacian(patch, cv2.CV_64F).var())
+    if patch.size == 0 or patch.shape[0] < PRESMOOTH_KSIZE or patch.shape[1] < PRESMOOTH_KSIZE:
+        # too small for the pre-smoothing kernel -- fall back to raw Laplacian
+        # directly rather than risk cv2.GaussianBlur on a degenerate patch.
+        return float(cv2.Laplacian(patch, cv2.CV_64F).var()) if patch.size else 0.0
+    patch = np.ascontiguousarray(patch)
+    smoothed = cv2.GaussianBlur(patch, (PRESMOOTH_KSIZE, PRESMOOTH_KSIZE), 0)
+    return float(cv2.Laplacian(smoothed, cv2.CV_64F).var())
 
 
 def audit_video(path: Path, sample_every: int, min_conf: float, sharpness_threshold: float,
@@ -149,7 +162,18 @@ def audit_video(path: Path, sample_every: int, min_conf: float, sharpness_thresh
                 continue
             gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
             for box, conf in dets:
-                sharp = box_sharpness(gray, box)
+                try:
+                    sharp = box_sharpness(gray, box)
+                except Exception as e:
+                    # A privacy audit should fail open (flag for manual review),
+                    # not silently drop a detection it couldn't score -- and must
+                    # not crash a multi-hour run over one malformed box.
+                    print(f"  [WARN] sharpness computation failed on frame {idx}, "
+                          f"box {box}: {type(e).__name__}: {e} -- flagging for manual review", flush=True)
+                    flagged.append({"frame": idx, "confidence": round(conf, 3), "sharpness": "ERROR"})
+                    if dump_dir is not None:
+                        cv2.imwrite(str(dump_dir / f"{path.stem}_frame{idx}_ERROR.png"), bgr)
+                    continue
                 if sharp < sharpness_threshold:
                     continue  # detected region is blurred -- not a genuine residual face
                 flagged.append({"frame": idx, "confidence": round(conf, 3), "sharpness": round(sharp, 1)})
