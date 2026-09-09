@@ -55,6 +55,11 @@ def _fused_files(dataset_root: Path):
 
 
 def _robust_outlier_pct(x: np.ndarray, lo: float, hi: float) -> float:
+    # Percentage of PRESENT readings outside [lo, hi]. Rows inside a disclosed
+    # HR/IBI dropout are NaN in the release and are excluded from the
+    # denominator, matching the manuscript's "x% of readings" convention
+    # (counting them would understate the rate by a factor of 1 - dropout).
+    x = x[np.isfinite(x)]
     return float(((x < lo) | (x > hi)).mean() * 100)
 
 
