@@ -28,9 +28,16 @@ import pandas as pd
 
 DATASET_ROOT = Path(os.environ.get("DATASET_ROOT", "") or
                     r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final")
-PRE = DATASET_ROOT / "Preprocessed_Dataset"
+# LABELS_V2=1 checks manuscript v6 (version-2 labels): the fused files come from the
+# label-only v2 tree (PREPROCESSED_ROOT, default sibling Published_Dataset_Final_v2_LABELS),
+# everything else still from the v1 release.
+LABELS_V2 = os.environ.get("LABELS_V2", "") == "1"
+PRE_ROOT = Path(os.environ.get("PREPROCESSED_ROOT", "") or
+                (DATASET_ROOT.parent / "Published_Dataset_Final_v2_LABELS" if LABELS_V2 else DATASET_ROOT))
+PRE = PRE_ROOT / "Preprocessed_Dataset"            # fused.csv (labels)
+PRE_V1 = DATASET_ROOT / "Preprocessed_Dataset"     # Front_emotions / Side_pose (not duplicated in the v2 tree)
 RAW = DATASET_ROOT / "Raw_Dataset"
-OUT = Path(__file__).resolve().parent / "validation_output" / "manuscript_numbers_check.csv"
+OUT = Path(__file__).resolve().parent / "validation_output" / ("manuscript_numbers_check_v2labels.csv" if LABELS_V2 else "manuscript_numbers_check.csv")
 
 # value stated in the manuscript, and the tolerance used to compare
 EXPECTED = {
@@ -59,6 +66,19 @@ EXPECTED = {
     "ibi_gap_max_s": (84.0, 0.05), "ibi_gap_gt40_sessions": (8, 0), "ibi_gap_median_s": (12.1, 0.05),
     "scr_rise_median": (0.26, 0.005), "scr_rise_max": (3.06, 0.05), "scr_amp_gt100_pct": (0.048, 0.0005), "scr_amp_max": (9925, 1),
 }
+# manuscript v6 / labels version 2 (Table 4, Data Overview, Usage Notes)
+EXPECTED_V2_LABELS = {
+    "normal_ts": (3497601, 0), "accel_ts": (3813, 0), "brake_ts": (653, 0), "turn_ts": (2004, 0),
+    "normal_pct": (99.82, 0.005), "accel_pct": (0.11, 0.005), "brake_pct": (0.02, 0.005), "turn_pct": (0.06, 0.005),
+    "accel_events": (156, 0), "brake_events": (37, 0), "turn_events": (92, 0), "total_events": (285, 0),
+    "accel_med_dur": (0.80, 0.005), "brake_med_dur": (0.60, 0.005), "turn_med_dur": (0.72, 0.005),
+    "accel_iqr": ("0.63-1.21", None), "brake_iqr": ("0.52-0.80", None), "turn_iqr": ("0.52-0.96", None),
+    "events_per_driver_median": (11, 0), "events_per_driver_min": (2, 0), "events_per_driver_max": (47, 0),
+    "events_per_session_median": (3, 0), "events_per_session_min": (0, 0), "events_per_session_max": (20, 0),
+    "zero_event_sessions": (11, 0),
+}
+if LABELS_V2:
+    EXPECTED.update(EXPECTED_V2_LABELS)
 
 
 def flat_pct(v, min_run=10):
@@ -131,7 +151,8 @@ def main():
     got["total_events"] = sum(len(durs[k]) for k in durs)
     pdv = np.array(list(ev_per_driver.values())); psv = np.array(list(ev_per_session.values()))
     got.update(events_per_driver_median=int(np.median(pdv)), events_per_driver_min=int(pdv.min()), events_per_driver_max=int(pdv.max()),
-               events_per_session_median=int(np.median(psv)), events_per_session_min=int(psv.min()), events_per_session_max=int(psv.max()))
+               events_per_session_median=int(np.median(psv)), events_per_session_min=int(psv.min()), events_per_session_max=int(psv.max()),
+               zero_event_sessions=int((psv == 0).sum()))
     S = np.vstack(speed_pairs); W = np.vstack(wheel_pairs)
     for name, M in [("speed", S), ("wheel", W)]:
         ok = np.isfinite(M).all(1); a, b = M[ok, 0], M[ok, 1]; dd = np.abs(a - b)
@@ -159,13 +180,13 @@ def main():
     fronts = sorted(RAW.rglob("*_Front_blurred.mp4")); sides = sorted(RAW.rglob("*_Side_blurred.mp4"))
     got.update(front_videos=len(fronts), side_videos=len(sides), video_files=len(fronts) + len(sides))
     frows = 0; fok = 0
-    for f in sorted(PRE.rglob("*_Front_emotions.csv")):
+    for f in sorted(PRE_V1.rglob("*_Front_emotions.csv")):
         e = pd.read_csv(f)
         cols = [c for c in e.columns if c.lower().split("_")[-1] in ("angry", "disgust", "fear", "happy", "sad", "surprise", "neutral")]
         s = e[cols].sum(axis=1); det = e[cols].notna().all(axis=1); frows += len(e)
         fok += int((((s - 100).abs() <= 1) & det).sum())
     got.update(facial_rows=frows, facial_sum_ok_pct=round(fok / frows * 100, 2))
-    poses = sorted(PRE.rglob("*_Side_pose.csv")); cov = []; oob = {}
+    poses = sorted(PRE_V1.rglob("*_Side_pose.csv")); cov = []; oob = {}
     for f in poses:
         p = pd.read_csv(f); det = p["pose_detected"].astype(bool) if "pose_detected" in p else p.iloc[:, 2].notna()
         cov.append(det.mean() * 100)

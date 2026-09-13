@@ -10,6 +10,16 @@ released dataset — harsh-event annotation, multimodal fusion, face/video de-id
 session trimming, and the technical-validation checks and figures reported in the
 manuscript.
 
+> **Labels version 2 (2026-09-13).** This repository line carries the redefined harsh-event
+> labels described in manuscript v6: `01_annotation/label_harsh_events_v2.py` (the rule),
+> `02_dataset_construction/regen_v2/regenerate_labels_v2.py` (builds the separately named
+> `Published_Dataset_Final_v2_LABELS` release, a label-only delta over v1 in which `label` is
+> recomputed and the previous labels are kept as `label_v1_peak`), `release_snapshot_v2/`
+> (its schema/metadata/manifest) and `MANUAL_EXCEPTIONS_v2.md` (§7: acceleration provenance,
+> why the labels were redefined, calibration on the deliberate-manoeuvre drives). The v1 code
+> (`01_annotation/label_harsh_events.py`) and `release_snapshot/` are retained unchanged. See
+> "Labels: version 1 and version 2" below.
+
 **This repository does not contain the code for the separate companion research paper**
 (classification benchmarking, multimodal fusion-model comparisons, precursor/stress-index
 analysis). That work lives in a different repository and is intentionally out of scope here.
@@ -223,6 +233,35 @@ See `requirements.txt`. Additionally:
   pose files onto the 25 Hz grid, and builds a leakage-free leave-one-driver-out split.
 - `requirements.txt` pins the versions used to produce the released files and the manuscript's
   Technical Validation numbers.
+
+## Labels: version 1 and version 2
+
+The released `lat_acc_g` / `lon_acc_g` are the VBOX HD2's GNSS-derived channels -- the one-sample
+backward difference of the 25 Hz Doppler speed and speed x heading rate, unsmoothed
+(`05_technical_validation/audit_acceleration_provenance.py`; no IMU channel was logged). The
+version-1 rule (`01_annotation/label_harsh_events.py`) thresholded rolling extrema of that raw
+derivative over a trailing 1 s window, so a single 40 ms spike could sustain a condition for 25
+samples; on the release 78-87 % of v1 events contained at most one consecutive sample above
+threshold (`audit_label_sensitivity_gnss.py`, `event_exceedance_structure.csv`).
+
+Version 2 (`01_annotation/label_harsh_events_v2.py`) is computed from the released `fused.csv`
+columns alone: 0.5 s centred moving average of `lon_acc_g` / |`lat_acc_g`|, exceedance sustained
+>= 0.5 s (gaps <= 0.2 s closed, no dilation), thresholds 0.20 g acceleration (throttle > 25 %,
+speed > 15 km/h), 0.35 g braking (speed > 15 km/h and CAN-speed-derived deceleration
+<= -0.3 m/s^2), 0.45 g |lateral| (speed > 30 km/h), priority Turning > Braking > Acceleration.
+Thresholds were calibrated on the three deliberate-manoeuvre drives in the study vehicle
+(`05_technical_validation/estimate_redefined_labels.py`; 10/10 brakes, 11/11 turns, accelerations
+peak at the vehicle's own 0.21-0.29 g ceiling). Totals: 156 / 37 / 92 = 285 events (v1: 10,394).
+
+```
+DATASET_ROOT=/path/to/Published_Dataset_Final \
+python 02_dataset_construction/regen_v2/regenerate_labels_v2.py            # dry run: counts
+python 02_dataset_construction/regen_v2/regenerate_labels_v2.py --apply    # writes ../Published_Dataset_Final_v2_LABELS
+LABELS_V2=1 python 05_technical_validation/audit_manuscript_numbers.py     # checks manuscript v6 numbers (0 FAIL / 78)
+PREPROCESSED_ROOT=/path/to/Published_Dataset_Final_v2_LABELS python 06_figures/make_route_harsh_density_figure.py
+python 06_figures/make_alignment_figure.py --dataset-root /path/to/Published_Dataset_Final_v2_LABELS \
+       --driver 6 --session 4 --start 160.2 --out-name fig_multimodal_alignment_v2
+```
 
 ## Known limitations of this release
 

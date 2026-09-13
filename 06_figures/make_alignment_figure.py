@@ -50,6 +50,7 @@ def main():
     ap.add_argument("--session", type=int, default=2)
     ap.add_argument("--start", type=float, default=249.8, help="segment start, s after trimmed session start")
     ap.add_argument("--duration", type=float, default=122.0)
+    ap.add_argument("--out-name", default="fig_multimodal_alignment", help="output file stem (e.g. fig_multimodal_alignment_v2)")
     a = ap.parse_args()
     if not a.dataset_root:
         ap.error("--dataset-root must be set (or DATASET_ROOT)")
@@ -90,9 +91,9 @@ def main():
 
     OUT_DIR.mkdir(exist_ok=True)
     for ext in ("png", "pdf"):
-        fig.savefig(OUT_DIR / f"fig_multimodal_alignment.{ext}", dpi=300, bbox_inches="tight")
+        fig.savefig(OUT_DIR / f"{a.out_name}.{ext}", dpi=300, bbox_inches="tight")
     print(f"{tag} segment {a.start:.1f}-{a.start + a.duration:.1f} s: {len(seg)} rows, "
-          f"{len(spans)} labelled spans -> {OUT_DIR / 'fig_multimodal_alignment.png'}")
+          f"{len(spans)} labelled spans -> {OUT_DIR / (a.out_name + '.png')}")
 
 
 if __name__ == "__main__":

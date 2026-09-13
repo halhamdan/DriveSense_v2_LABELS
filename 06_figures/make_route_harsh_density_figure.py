@@ -38,7 +38,10 @@ MIN_DRIVERS_FOR_CELL = 10  # generalization bar: at least half the drivers
 
 def load_session_gps_label(dataset_root: Path, driver: int, session: int) -> pd.DataFrame | None:
     raw_path = dataset_root / "Raw_Dataset" / f"D{driver}" / f"Session_{session}" / f"D{driver}_S{session}_VBOX_raw.csv"
-    fused_path = dataset_root / "Preprocessed_Dataset" / f"D{driver}" / f"Session_{session}" / f"D{driver}_S{session}_fused.csv"
+    # PREPROCESSED_ROOT lets the labels come from a separate label-only tree
+    # (e.g. Published_Dataset_Final_v2_LABELS) while GPS stays in the v1 raw tier.
+    pre_root = Path(os.environ.get("PREPROCESSED_ROOT", "") or dataset_root)
+    fused_path = pre_root / "Preprocessed_Dataset" / f"D{driver}" / f"Session_{session}" / f"D{driver}_S{session}_fused.csv"
     if not raw_path.exists() or not fused_path.exists():
         return None
 
