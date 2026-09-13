@@ -140,6 +140,9 @@ def fit_calibration(timesyncs_csv: Path, min_pings: int = 5, model: str = "ancho
 
     max_step_s, step_at_s = _largest_sustained_step(x, off)
     median_offset_s = float(np.median(off))
+    # robust scatter of the per-ping offsets about the median (MAD, ms): the
+    # measured precision of the anchor itself, insensitive to isolated glitch pings
+    mad_ms = float(np.median(np.abs(off - median_offset_s)) * 1000)
 
     if model == "anchor_only":
         slope, intercept = 1.0, median_offset_s
@@ -152,10 +155,13 @@ def fit_calibration(timesyncs_csv: Path, min_pings: int = 5, model: str = "ancho
         n_used, n_out = int(keep.sum()), int((~keep).sum())
         max_resid_ms = float(np.max(np.abs(resid[keep])) * 1000) if keep.any() else float(np.max(np.abs(resid)) * 1000)
 
-    return Calibration(
+    cal = Calibration(
         x0_ms=x0, y0_unix=y0, slope=slope, intercept=intercept,
         n_pings_used=n_used, n_outliers=n_out,
         span_s=float(x.max() - x.min()), max_resid_ms=max_resid_ms,
         model=model, max_step_s=max_step_s, step_at_s=step_at_s,
         median_offset_s=median_offset_s, linear_slope_ppm=float((lin_slope - 1.0) * 1e6),
     )
+    cal.mad_ms = mad_ms
+    cal.first_ping_device_s = float(x0 / 1000.0)
+    return cal

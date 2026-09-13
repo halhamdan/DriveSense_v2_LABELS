@@ -6,15 +6,21 @@ authors:
   - family-names: Alhamdan
     given-names: Hanadi
     affiliation: "Durham University; Princess Nourah bint Abdulrahman University"
+    orcid: "https://orcid.org/0009-0004-7410-1522"
+    email: halhamdan@pnu.edu.sa
   - family-names: Alosaimi
     given-names: Ghadah
-    affiliation: "Durham University; Princess Nourah bint Abdulrahman University"
+    affiliation: "Durham University; Imam Mohammad Ibn Saud Islamic University"
   - family-names: Atapour-Abarghouei
     given-names: Amir
     affiliation: "Durham University"
+    orcid: "https://orcid.org/0000-0002-4242-4579"
+    email: amir.atapour-abarghouei@durham.ac.uk
   - family-names: Arvin
     given-names: Farshad
     affiliation: "Durham University"
+    orcid: "https://orcid.org/0000-0001-7950-3193"
+    email: farshad.arvin@durham.ac.uk
 license: MIT
 repository-code: "https://github.com/halhamdan/DriveSense"
 preferred-citation:

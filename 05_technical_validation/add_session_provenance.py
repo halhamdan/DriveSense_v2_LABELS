@@ -73,6 +73,9 @@ def main():
     rep = pd.read_csv(REGEN_REPORT).set_index("tag")
     if len(rep) != 79 or (rep["status"] != "ok").any():
         raise SystemExit("regeneration report is not a clean 79-session report")
+    # per-session timing quality (Supplementary Table S3), if available
+    tq_path = Path(__file__).resolve().parent / "validation_output" / "timing_quality_per_session.csv"
+    tq = pd.read_csv(tq_path).set_index("tag") if tq_path.exists() else None
 
     n_sync, n_exc = 0, 0
     for s in meta["sessions"]:
@@ -92,6 +95,16 @@ def main():
                 "calibration_span_s": round(float(r["calibration_span_s"]), 1),
                 "linear_fit_slope_ppm_diagnostic": round(float(r["linear_slope_ppm"]), 1),
             }
+            if tq is not None and tag in tq.index:
+                q = tq.loc[tag]
+                s["sync"].update({
+                    "ping_log_coverage_pct": round(float(q["coverage_pct"]), 1),
+                    "ping_offset_mad_ms": round(float(q["mad_ms"]), 1),
+                    "residual_alignment_bound_s": round(float(q["bound_s"]), 3),
+                    "bound_definition": "indicative: max(max_step_s, 2*MAD, 0.10 s); assumes the laptop's clock "
+                                        "corrections seen in the ping log are representative of its error. The laptop "
+                                        "clock's own offset from UTC at recording time is UNKNOWN and not included.",
+                })
             n_sync += 1
         exc = EXCEPTIONS.get(tag, [])
         if s.get("status") != "ok" and "session_excluded_insufficient_overlap" not in exc:

@@ -12,8 +12,8 @@ Snapshot taken 2026-09-09. `data_schema.json` `generated`: 2026-09-09. `dataset_
 
 | File | Bytes | SHA-256 |
 |---|---|---|
-| `data_schema.json` | 27,824 | `99755d1dbe99765c557b1a506c00ff02719427d7cfef226b399a47ca8aabd802` |
-| `dataset_metadata.json` | 80,236 | `12c70d9d84b90431e08f989d2becc7a65865d5cf89942f4ee3f50460055bbac5` |
+| `data_schema.json` | 27,824 | `468bbebf73206c82d719b2660301b1d2db5d8abf133a71a02001197266fc9fbb` |
+| `dataset_metadata.json` | 112,067 | `47f00e29ba06a764fcf2d00d913b51317b15b65d54fcc44aa03693d41cbe9c61` |
 | `manifest.csv` | 62,794 | `957b284323c35ff4e36e08f187cf1274716fdaaaa5228b7ac2c7e49419e931a8` |
 
 - `data_schema.json` -- every column of every released file (dtype, unit, plausible range,

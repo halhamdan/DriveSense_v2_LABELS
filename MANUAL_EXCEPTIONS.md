@@ -74,6 +74,15 @@ normalised to the full frame and a crop would silently invalidate them). Pre-mas
 
 ## 5. Timing and synchronisation
 
+* **Clock sources.** VBOX HD2: GNSS-disciplined UTC on telemetry, GNSS and both videos (one
+  clock; exact to the sample/frame). EmotiBit: free-running counter, no absolute clock; anchored
+  to UTC through the dedicated logging laptop (macOS Sonoma 14.6.1, EmotiBit Oscilloscope
+  application, CP210x VCP driver v6 for USB configuration) via NTP-style sync pings over Wi-Fi.
+  The laptop clock was not referenced to GNSS time; macOS auto-synchronises with Apple time
+  servers when networked, and the 0.15–0.75 s offset steps in 12/79 ping logs are consistent
+  with such corrections; the laptop's own offset from UTC during each drive was not measured
+  (`dataset_metadata.json` → `timing_model`, `sessions[*].sync`, Supplementary Table S3).
+
 * **Trim points**: automatic rule (speed ≥ 15 km/h and ≥ 120 m from base for ≥ 80 % of an
   8 s window) with every start/end reviewed against source video; reviewer overrides are the
   `manual_start_s` / `manual_end_s` columns of

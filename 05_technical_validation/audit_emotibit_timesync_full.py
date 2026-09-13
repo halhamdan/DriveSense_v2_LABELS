@@ -232,6 +232,7 @@ def analyse_session(tag: str, driver: int, session: int) -> dict | None:
         "anchor_only_max_step_s": cal_ao.max_step_s if cal_ao is not None else None,
         "anchor_only_step_at_s": cal_ao.step_at_s if cal_ao is not None else None,
         "anchor_only_max_resid_ms": cal_ao.max_resid_ms if cal_ao is not None else None,
+        "anchor_only_mad_ms": cal_ao.mad_ms if cal_ao is not None else None,
     }
 
 

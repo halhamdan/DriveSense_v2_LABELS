@@ -200,7 +200,7 @@
         "SCR_RISE_TIME": {
           "dtype": "float64 (nullable)",
           "unit": "s",
-          "description": "Skin-conductance-response rise time: the device's onset-to-peak time (s), one value per detected phasic EDA event; same event-triggered resampling and dropout-flag treatment as SCR_AMPLITUDE. Median 0.26 s, 95% below 0.83 s, maximum 2.5 s -- shorter than classical SCR rise times because of the device's onset/peak definitions. Plausible range 0-5 s.",
+          "description": "Skin-conductance-response rise time: the device's onset-to-peak time (s), one value per detected phasic EDA event; same event-triggered resampling and dropout-flag treatment as SCR_AMPLITUDE. Median 0.26 s, 95% below 0.83 s, maximum 3.1 s -- shorter than classical SCR rise times because of the device's onset/peak definitions. Plausible range 0-5 s.",
           "range": [
             0,
             5
