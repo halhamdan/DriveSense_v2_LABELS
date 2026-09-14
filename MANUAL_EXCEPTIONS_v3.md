@@ -1,4 +1,4 @@
-# Manual exceptions and per-session deviations
+# Manual exceptions and per-session deviations (release version 3)
 
 Everything in the released dataset was produced by the scripts in this repository, but a
 number of sessions or channels received a decision or a correction that a reader cannot infer
@@ -110,7 +110,7 @@ normalised to the full frame and a crop would silently invalidate them). Pre-mas
   location); row count and labels unchanged.
 * **VBOX-side anchor anomaly**: D1_S4 and D12_S2 show a 0.12–0.16 s gap between the first two
   GPS timestamps (intermittent GPS time-of-day stall); not corrected, disclosed.
-* **OPEN DEFECT — video lead-in not applied (found 2026-09-13, decision pending).** The VBOX HD2
+* **RESOLVED IN v3 — video lead-in not applied in v1/v2 (found 2026-09-13; see §9).** The VBOX HD2
   starts its video 10.4–11.3 s (median 11.1 s; `video_lead_in_per_session.csv`, from Racelogic's
   `Avi sync time` at row 0) before the first logged telemetry sample. `apply_trim.py` /
   `build_raw_tier.py` mapped frames as round((t − t0_raw)·fps), i.e. assumed frame 0 = row 0, so
@@ -227,3 +227,102 @@ normalised to the full frame and a crop would silently invalidate them). Pre-mas
 * **Device validation citation**: Costantini et al. 2023 (`costantini2023`) is an Empatica E4 study;
   the EmotiBit evidence is `emotibitworkload` (good HR agreement, weaker HRV/EDA). v6 no longer
   claims a driving-specific validation of the EmotiBit.
+
+
+## 9. Release version 3 (2026-09-13): video realignment, D17_S2 truncation
+
+Built by `02_dataset_construction/regen_v3/build_v3_video_realign.py` into
+`Published_Dataset_Final_v3_VIDEO_ALIGNED` (complete tree; v1 and v2 untouched).
+
+* **Video lead-in.** The VBOX HD2 starts its video 10.4–11.3 s (median 11.1 s) before the first logged
+  telemetry sample (`Avi sync time` at row 0 of every native export;
+  `validation_output/video_lead_in_per_session.csv`). `apply_trim.py` / `build_raw_tier.py` mapped
+  telemetry time to frames as round((t − t0_raw)·30), i.e. assumed frame 0 = row 0, so every v1/v2 video,
+  `Front_emotions.csv` and `Side_pose.csv` showed, at elapsed τ, the scene at τ − lead_in.
+  Verification: raw-video speedometer overlay (D1_S1: telemetry departs 21.5 s, overlay 000 km/h at
+  23.5 s, moving at 30 s; a telemetry stop maps to a frame showing 039 km/h = speed 10.4 s earlier;
+  `validation_output/video_offset_evidence/`), and the frame-pair stop test on released files
+  (`audit_released_video_stop_frames.py`: 49 sessions with a qualifying stop, 54 of 68 tests OFFSET,
+  13 inconclusive, none genuinely aligned).
+* **Fix applied in v3.** The first L = round(lead_in·30) frames of each released, de-identified video were
+  dropped (re-encoded h264_nvenc cq 26) and the two frame-indexed CSVs shifted by −L (frame, timestamp_s
+  re-indexed). No new footage: every blur, researcher mask and exposure fix stays valid; each video ends
+  lead_in s before the telemetry. Frame counts verified per file (`regen_v3/build_v3_report.csv`).
+  Trim instants (telemetry times) unchanged → fused.csv identical to v2 except D17_S2.
+  Contact sheets used for the trim review had been extracted with the same wrong mapping (frames ~11 s
+  earlier than labelled); the trims are nonetheless sound: 78/79 sessions start with the vehicle moving,
+  longest stationary tail 7.9 s (`audit_trim_endpoints.py`); D13_S3 starts with 218 s at standstill
+  (deliberate manual choice).
+* **§2 exposure-fix intervals in v3 frame indices** (v1 index − L): D18_S4_Side (L=336) 17164–17564
+  (+ the first-pass static mask window 710.6−11.2 → 699.4–713.0 s); D4_S2_Front (L=333) 6967–7267,
+  11167–11367, 27667–28267; D10_S1_Front (L=332) 88368–88868; D15_S1_Front (L=336) 76269–77919;
+  D9_S3_Side (L=333) 44667–44967.
+* **D17_S2 logging pause.** `audit_vbox_time_continuity.py`: at released elapsed 654.52 s the receiver's
+  UTC jumps by 123.36 s while `Elapsed time` and the video continue (satellites 0 → GPS loss). Because
+  unix_time = first UTC + elapsed, v1/v2 rows after that instant are 123.4 s too early (EmotiBit
+  columns misaligned there; video offset not constant). v3 truncates D17_S2 at 654.52 s in all tiers
+  (fused 24,284 → 16,364 rows; raw VBOX/EmotiBit CSVs by unix_time; videos/CSVs by frame) and recomputes
+  its v2 labels on the truncated file (D17_S2 had no v2 event either way). Alternative (re-fuse the
+  post-pause segment on a UTC-based timeline) left for the supervisor's decision.
+* **UTC-vs-elapsed divergence ≤ 1.5 s** in D8_S1 (1.44 s), D18_S1 (0.92), D4_S1 (0.64), D19_S1 (0.60):
+  gradual, inside the first video segment; disclosed in `sessions[*].exceptions`, not corrected.
+* `dataset_metadata.json` → `release_version: 3`, `video_alignment`, `sessions[*].video`
+  (lead_in_s, frames_dropped_at_start, front/side frame counts); `data_schema.json` 3.0 with changelog
+  entry; `manifest.csv` rebuilt by hashing every file in the tree.
+
+## 10. Video-derived feature audit (2026-09-14, v3 frames)
+
+`05_technical_validation/make_visual_feature_audit_sheet.py` (seed 20260913; 30 front + 30 side frames,
+≤ 1 per session per camera, rows with a detection). Notes: `validation_output/visual_feature_audit/reviewer_notes.md`.
+* Face box (Front_emotions.csv): on the face in 30/30, incl. 6 backlit frames.
+* Wrists: adequate in ~26/30; near-side shoulder ~28/30; **far-side (occluded) shoulder misplaced on the
+  centre console in ~10/30** → `posture_deviation` biased in those frames.
+* **`hands_on_wheel_proxy` is unreliable as released**: agrees with the visible hand placement in 9/30,
+  under-reports in 20/30 — the fixed rectangle (x 0.25–0.75, y 0.55–1.0) lies mostly below the wheel
+  (≈ x 0.45–0.65, y 0.35–0.55 in this framing). Column kept (documented), Usage Notes tell users to
+  re-derive from the wrist coordinates. Fixing the rectangle would change a released column → left for
+  a later version if the supervisor prefers.
+* Denominators (`make_video_feature_counts.py`, v3): 4,170,627 front frames; 4,170,203 emotion rows;
+  4,127,040 detections (98.96 %); 100 % of detections sum to 100 ± 1; 3,872,036 side frames; 654,562 pose
+  rows / 648,792 detected (99.1 %).
+
+### 9b. Video coverage restored (2026-09-14, second v3 pass)
+
+* A full-length blurred FRONT video exists for every session
+  (`Documents/Front_Blur_V2_Fix/D*/Session_*/{tag}_Front_blurred_v2_full.mp4`, the output of the
+  same blurring run the release came from; released frame k = its frame fs_old + k, verified by
+  pixel matching). No full-length blurred SIDE video exists (blurred and trimmed in place).
+* `regen_v3/restore_video_tails_v3.py` rebuilt every v3 video as released[L:] + the L frames the
+  earlier cut had left off the end: front from `_v2_full`; side by blurring the raw frames
+  (`Published_Dataset/.../{tag}_Side.mp4`) with the release pipeline's detector and rules
+  (MTCNN keep_all p ≥ 0.7, carry-forward with extra padding, Gaussian k = 51) **plus** a static
+  blur floor over the driver-head region (x 0.08–0.42, y 0.05–0.55) and the session's researcher
+  mask (black left strip measured from the released side video: 300 px for D1_S1, ~200 px otherwise).
+  Every restored segment has a review sheet in `05_technical_validation/validation_output/video_tail_review/`
+  (not in the public repo — controlled-access frames). Per-file counts/detections:
+  `regen_v3/build_v3_tails_report.csv`.
+* **D1_S1 side video had been cut twice in v1** (frame k = raw frame 2·fs_old + k → a further 51.5 s
+  late and 1,546 frames short; the only side file whose frame count differed from its front). Its
+  missing raw frames 1859–3091 (41 s) were blurred and restored the same way (1,217/1,233 detections).
+* `Front_emotions.csv` / `Side_pose.csv` are NOT extended (no DeepFace / MediaPipe environment on this
+  machine): they end lead_in s before the telemetry; documented in Methods, Usage Notes and metadata.
+* fs_old per session = round((released first `utc_tod_s` − native row-0 UTC) · 30), refined by matching
+  released front frame 100 to the full-length front (match diff ≈ 0.3 grey levels).
+
+### 10b. `hands_on_wheel_proxy` recomputed (v3, 2026-09-14)
+
+* Exact scoring of the audited 30 side frames: v1 column agrees 7/30, under-reports 19, over-reports 4
+  (the first tally of 9/20/1 was approximate). `validation_output/hands_on_wheel_recalibration.csv`.
+* New definition (`regen_v3/recompute_hands_on_wheel_v3.py`, applied to all 75 v3 `Side_pose.csv`):
+  wheel region **x 0.40–0.70, y 0.28–0.62** measured from the frames (not fitted; a 0.05-step grid search
+  finds no better rectangle), released wrist coordinates only (no visibility gate is possible — not
+  released), missing wrist = not on wheel. Agreement 23/30 (5 under, 2 over, all half-step).
+  Dataset-wide mean 0.33 → 0.62; both hands in region on 41 % of detected rows, none on 17 %.
+* Old values kept as `hands_on_wheel_proxy_v1` (13 in-cabin columns now); schema/metadata/manifest updated.
+* Per-session alternatives tried and rejected (`regen_v3/wheel_region_per_session.py`): circle fit to the
+  wrist cloud (wrists do not trace the rim) and GMM grip clusters in union with the box (21/30, over-reports
+  hands resting near the wheel). Fixed measured box kept. A blind 100-frame second-rater pack is prepared in
+  `05_technical_validation/validation_output/hands_on_wheel_rating/` (`make_hands_on_wheel_rating_pack.py`).
+* **Independent blind check, 100 frames** (`make_hands_on_wheel_rating_pack.py`, `score_hands_on_wheel_ratings.py`,
+  rater CL): recomputed proxy exact 59 %, within one hand 93 %, quadratic κ 0.55 (stopped 74 %, moving 44 %);
+  v1 25 %. This — not 23/30 — is what v6 quotes. Second rater (Hanadi) pending: `hands_on_wheel_rating/rating_template.csv`.

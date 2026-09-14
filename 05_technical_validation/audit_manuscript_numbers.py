@@ -68,17 +68,28 @@ EXPECTED = {
 }
 # manuscript v6 / labels version 2 (Table 4, Data Overview, Usage Notes)
 EXPECTED_V2_LABELS = {
-    "normal_ts": (3497601, 0), "accel_ts": (3813, 0), "brake_ts": (653, 0), "turn_ts": (2004, 0),
-    "normal_pct": (99.82, 0.005), "accel_pct": (0.11, 0.005), "brake_pct": (0.02, 0.005), "turn_pct": (0.06, 0.005),
-    "accel_events": (156, 0), "brake_events": (37, 0), "turn_events": (92, 0), "total_events": (285, 0),
-    "accel_med_dur": (0.80, 0.005), "brake_med_dur": (0.60, 0.005), "turn_med_dur": (0.72, 0.005),
-    "accel_iqr": ("0.63-1.21", None), "brake_iqr": ("0.52-0.80", None), "turn_iqr": ("0.52-0.96", None),
-    "events_per_driver_median": (11, 0), "events_per_driver_min": (2, 0), "events_per_driver_max": (47, 0),
-    "events_per_session_median": (3, 0), "events_per_session_min": (0, 0), "events_per_session_max": (20, 0),
-    "zero_event_sessions": (11, 0),
+    "normal_ts": (3499991, 0), "accel_ts": (3245, 0), "brake_ts": (571, 0), "turn_ts": (264, 0),
+    "normal_pct": (99.88, 0.005), "accel_pct": (0.09, 0.005), "brake_pct": (0.02, 0.005), "turn_pct": (0.01, 0.005),
+    "accel_events": (134, 0), "brake_events": (30, 0), "turn_events": (12, 0), "total_events": (176, 0),
+    "accel_med_dur": (0.80, 0.005), "brake_med_dur": (0.60, 0.005), "turn_med_dur": (0.76, 0.005),
+    "accel_iqr": ("0.60-1.23", None), "brake_iqr": ("0.56-0.91", None), "turn_iqr": ("0.65-1.14", None),
+    "events_per_driver_median": (6, 0), "events_per_driver_min": (0, 0), "events_per_driver_max": (37, 0),
+    "events_per_session_median": (1, 0), "events_per_session_min": (0, 0), "events_per_session_max": (16, 0),
+    "zero_event_sessions": (26, 0),
 }
 if LABELS_V2:
     EXPECTED.update(EXPECTED_V2_LABELS)
+# release version 3 (2026-09-14): D17_S2 truncated at its logging pause (7,920 rows fewer); videos realigned.
+# Run with DATASET_ROOT=PREPROCESSED_ROOT=<v3 tree>, LABELS_V2=1, RELEASE_V3=1.
+EXPECTED_V3 = {
+    "fused_rows": (3496151, 0), "hours": (38.85, 0.005), "normal_ts": (3492071, 0),
+    "wheel_p95_abs": (1.12, 0.005), "wheel_gt5_pct": (0.13, 0.005), "height_oor_pct": (0.0068, 0.00005),
+    "facial_rows": (4170203, 0), "facial_sum_ok_pct": (98.96, 0.005),
+    "eda_median": (1.56, 0.005), "eda_oor_pct": (5.63, 0.005), "ibi_dropout_pct": (17.81, 0.005), "scr_present_pct": (12.03, 0.005),
+}
+if os.environ.get("RELEASE_V3", "") == "1":
+    EXPECTED.update(EXPECTED_V3)
+    OUT = OUT.with_name("manuscript_numbers_check_v3.csv")
 
 
 def flat_pct(v, min_run=10):

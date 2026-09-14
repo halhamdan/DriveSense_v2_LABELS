@@ -24,3 +24,15 @@ Thumbs.db
 
 # Companion sensitivity-check outputs (generated; see regen_v2/precursor_sensitivity_check.py)
 */regen_v2/precursor_sensitivity_output*/
+
+# tracked exceptions: the 60-frame visual-feature audit selection and notes (no frames)
+!05_technical_validation/validation_output/
+05_technical_validation/validation_output/*
+!05_technical_validation/validation_output/visual_feature_audit/
+05_technical_validation/validation_output/visual_feature_audit/*
+!05_technical_validation/validation_output/visual_feature_audit/selection.csv
+!05_technical_validation/validation_output/visual_feature_audit/reviewer_notes.md
+!05_technical_validation/validation_output/hands_on_wheel_rating/
+05_technical_validation/validation_output/hands_on_wheel_rating/*
+!05_technical_validation/validation_output/hands_on_wheel_rating/*.csv
+!05_technical_validation/validation_output/hands_on_wheel_rating/INSTRUCTIONS.md

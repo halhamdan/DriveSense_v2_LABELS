@@ -1,6 +1,6 @@
 {
   "pipeline": "prepare_dataset.py + apply_trim.py + blur_side_video.py + build_raw_tier.py + reorganize_final.py",
-  "date": "2026-09-13",
+  "date": "2026-09-14",
   "fuse_hz": 25.0,
   "trim_method": "sustained speed (>=15 km/h) + distance (>=120 m from session base) for >=80% of an 8 s window; every session's cut point visually verified against source video (see trim_points_final.csv)",
   "sessions": [
@@ -32,12 +32,27 @@
         "bound_definition": "indicative: max(max_step_s, 2*MAD, 0.10 s); assumes the laptop's clock corrections seen in the ping log are representative of its error. The laptop clock's own offset from UTC at recording time is UNKNOWN and not included."
       },
       "exceptions": [
-        "two_raw_emotibit_recordings_largest_used"
+        "two_raw_emotibit_recordings_largest_used",
+        "v1_side_video_double_trimmed_restored_in_v3"
       ],
       "events_v2": {
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 10.42,
+        "frames_dropped_at_start": 313,
+        "realigned": true,
+        "front_frames": 70442,
+        "side_frames": 70442,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 313,
+        "tail_raw_frame_range": "71988-72300",
+        "side_tail_detections": "9/313 maxgap 186",
+        "side_researcher_mask_px": 300,
+        "side_history": "v1 side video was cut twice (frame k = raw frame 2*fs_old + k, 51.5 s late, 1,546 frames short); raw frames 1859-3091 restored and blurred in v3 (1217/1233 maxgap 3 detections)"
       }
     },
     {
@@ -72,6 +87,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.12,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 37741,
+        "side_frames": 37741,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "38736-39069",
+        "side_tail_detections": "334/334 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -106,6 +134,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 58639,
+        "side_frames": 58639,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "59166-59500",
+        "side_tail_detections": "331/335 maxgap 1",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -142,6 +183,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 5.553,
+        "frames_dropped_at_start": 167,
+        "realigned": true,
+        "front_frames": 30364,
+        "side_frames": 30364,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 167,
+        "tail_raw_frame_range": "33513-33679",
+        "side_tail_detections": "167/167 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -176,6 +230,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 2,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.086,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 56097,
+        "side_frames": 56097,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "70088-70420",
+        "side_tail_detections": "333/333 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -210,6 +277,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.253,
+        "frames_dropped_at_start": 338,
+        "realigned": true,
+        "front_frames": 38857,
+        "side_frames": 38857,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 338,
+        "tail_raw_frame_range": "40289-40626",
+        "side_tail_detections": "338/338 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -248,6 +328,17 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 28892,
+        "side_frames": null,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "36079-36410"
       }
     },
     {
@@ -282,6 +373,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.253,
+        "frames_dropped_at_start": 338,
+        "realigned": true,
+        "front_frames": 36679,
+        "side_frames": 36679,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 338,
+        "tail_raw_frame_range": "37609-37946",
+        "side_tail_detections": "275/338 maxgap 20",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -316,6 +420,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.12,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 84575,
+        "side_frames": 84575,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "91698-92031",
+        "side_tail_detections": "319/334 maxgap 13",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -352,6 +469,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 1
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 26501,
+        "side_frames": 26501,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "31021-31355",
+        "side_tail_detections": "335/335 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -386,6 +516,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 68488,
+        "side_frames": 68488,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "75491-75822",
+        "side_tail_detections": "332/332 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -420,6 +563,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.253,
+        "frames_dropped_at_start": 338,
+        "realigned": true,
+        "front_frames": 37924,
+        "side_frames": 37924,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 338,
+        "tail_raw_frame_range": "39659-39996",
+        "side_tail_detections": "338/338 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -450,12 +606,26 @@
         "bound_definition": "indicative: max(max_step_s, 2*MAD, 0.10 s); assumes the laptop's clock corrections seen in the ping log are representative of its error. The laptop clock's own offset from UTC at recording time is UNKNOWN and not included."
       },
       "exceptions": [
-        "two_raw_emotibit_recordings_largest_used"
+        "two_raw_emotibit_recordings_largest_used",
+        "vbox_utc_vs_elapsed_divergence_0.64s_not_corrected"
       ],
       "events_v2": {
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 10.987,
+        "frames_dropped_at_start": 330,
+        "realigned": true,
+        "front_frames": 67960,
+        "side_frames": 67960,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 330,
+        "tail_raw_frame_range": "75152-75481",
+        "side_tail_detections": "214/330 maxgap 59",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -492,6 +662,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.087,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 32782,
+        "side_frames": 32782,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "36852-37184",
+        "side_tail_detections": "328/333 maxgap 3",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -526,6 +709,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.086,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 105134,
+        "side_frames": 105134,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "105847-106179",
+        "side_tail_detections": "297/333 maxgap 12",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -560,6 +756,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.12,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 34318,
+        "side_frames": 34318,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "37964-38297",
+        "side_tail_detections": "333/334 maxgap 1",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -594,6 +803,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 1,
         "Harsh Turning": 3
+      },
+      "video": {
+        "lead_in_s": 8.453,
+        "frames_dropped_at_start": 254,
+        "realigned": true,
+        "front_frames": 92250,
+        "side_frames": 92250,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 254,
+        "tail_raw_frame_range": "103181-103434",
+        "side_tail_detections": "223/254 maxgap 27",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -628,6 +850,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.086,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 30690,
+        "side_frames": 30690,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "33199-33531",
+        "side_tail_detections": "333/333 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -662,6 +897,19 @@
         "Harsh Acceleration": 4,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.086,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 84109,
+        "side_frames": 84109,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "87652-87984",
+        "side_tail_detections": "333/333 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -696,6 +944,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.12,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 31437,
+        "side_frames": 31437,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "37547-37880",
+        "side_tail_detections": "334/334 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -730,6 +991,19 @@
         "Harsh Acceleration": 6,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 3.92,
+        "frames_dropped_at_start": 118,
+        "realigned": true,
+        "front_frames": 52050,
+        "side_frames": 52050,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 118,
+        "tail_raw_frame_range": "55928-56045",
+        "side_tail_detections": "118/118 maxgap 0",
+        "side_researcher_mask_px": 300
       }
     },
     {
@@ -766,6 +1040,17 @@
         "Harsh Acceleration": 5,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.286,
+        "frames_dropped_at_start": 339,
+        "realigned": true,
+        "front_frames": 62995,
+        "side_frames": null,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 339,
+        "tail_raw_frame_range": "66737-67075"
       }
     },
     {
@@ -800,6 +1085,19 @@
         "Harsh Acceleration": 6,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 28372,
+        "side_frames": 28372,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "30152-30486",
+        "side_tail_detections": "335/335 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -836,6 +1134,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 118398,
+        "side_frames": 118398,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "120472-120806",
+        "side_tail_detections": "330/335 maxgap 5",
+        "side_researcher_mask_px": 300
       }
     },
     {
@@ -870,6 +1181,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.12,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 30235,
+        "side_frames": 30235,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "32957-33290",
+        "side_tail_detections": "321/334 maxgap 13",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -904,6 +1228,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.119,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 101182,
+        "side_frames": 101182,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "105030-105363",
+        "side_tail_detections": "314/334 maxgap 14",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -938,6 +1275,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 3.62,
+        "frames_dropped_at_start": 109,
+        "realigned": true,
+        "front_frames": 31108,
+        "side_frames": 31108,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 109,
+        "tail_raw_frame_range": "31685-31793",
+        "side_tail_detections": "94/109 maxgap 13",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -967,11 +1317,26 @@
         "residual_alignment_bound_s": 0.1,
         "bound_definition": "indicative: max(max_step_s, 2*MAD, 0.10 s); assumes the laptop's clock corrections seen in the ping log are representative of its error. The laptop clock's own offset from UTC at recording time is UNKNOWN and not included."
       },
-      "exceptions": [],
+      "exceptions": [
+        "vbox_utc_vs_elapsed_divergence_1.44s_not_corrected"
+      ],
       "events_v2": {
         "Harsh Acceleration": 1,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 62313,
+        "side_frames": 62313,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "65715-66046",
+        "side_tail_detections": "327/332 maxgap 2",
+        "side_researcher_mask_px": 300
       }
     },
     {
@@ -1006,6 +1371,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.119,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 29227,
+        "side_frames": 29227,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "33783-34116",
+        "side_tail_detections": "334/334 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1042,6 +1420,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.086,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 116617,
+        "side_frames": 116617,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "120001-120333",
+        "side_tail_detections": "332/333 maxgap 1",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1076,6 +1467,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.086,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 36259,
+        "side_frames": 36259,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "39594-39926",
+        "side_tail_detections": "330/333 maxgap 2",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1110,6 +1514,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.119,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 95848,
+        "side_frames": 95848,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "101802-102135",
+        "side_tail_detections": "307/334 maxgap 11",
+        "side_researcher_mask_px": 300
       }
     },
     {
@@ -1144,6 +1561,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 33616,
+        "side_frames": 33616,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "39845-40179",
+        "side_tail_detections": "308/335 maxgap 27",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1181,6 +1611,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 2,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.087,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 60514,
+        "side_frames": 60514,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "62129-62461",
+        "side_tail_detections": "308/333 maxgap 4",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1215,6 +1658,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 2
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 33883,
+        "side_frames": 33883,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "35005-35339",
+        "side_tail_detections": "334/335 maxgap 1",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1252,6 +1708,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 96706,
+        "side_frames": 96706,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "102315-102646",
+        "side_tail_detections": "329/332 maxgap 2",
+        "side_researcher_mask_px": 300
       }
     },
     {
@@ -1286,6 +1755,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.02,
+        "frames_dropped_at_start": 331,
+        "realigned": true,
+        "front_frames": 28842,
+        "side_frames": 28842,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 331,
+        "tail_raw_frame_range": "31406-31736",
+        "side_tail_detections": "324/331 maxgap 6",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1322,6 +1804,17 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 94176,
+        "side_frames": null,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "97212-97543"
       }
     },
     {
@@ -1356,6 +1849,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.253,
+        "frames_dropped_at_start": 338,
+        "realigned": true,
+        "front_frames": 33778,
+        "side_frames": 33778,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 338,
+        "tail_raw_frame_range": "35001-35338",
+        "side_tail_detections": "299/338 maxgap 20",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1390,6 +1896,19 @@
         "Harsh Acceleration": 5,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.02,
+        "frames_dropped_at_start": 331,
+        "realigned": true,
+        "front_frames": 54737,
+        "side_frames": 54737,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 331,
+        "tail_raw_frame_range": "58014-58344",
+        "side_tail_detections": "314/331 maxgap 5",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1424,6 +1943,19 @@
         "Harsh Acceleration": 7,
         "Harsh Braking": 0,
         "Harsh Turning": 1
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 28157,
+        "side_frames": 28157,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "31954-32285",
+        "side_tail_detections": "297/332 maxgap 5",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1461,6 +1993,17 @@
         "Harsh Acceleration": 15,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 54114,
+        "side_frames": null,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "58052-58383"
       }
     },
     {
@@ -1495,6 +2038,19 @@
         "Harsh Acceleration": 7,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 26432,
+        "side_frames": 26432,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "27277-27611",
+        "side_tail_detections": "270/335 maxgap 38",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1531,6 +2087,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.12,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 53227,
+        "side_frames": 53227,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "58507-58840",
+        "side_tail_detections": "324/334 maxgap 8",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1567,6 +2136,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.187,
+        "frames_dropped_at_start": 336,
+        "realigned": true,
+        "front_frames": 33213,
+        "side_frames": 33213,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 336,
+        "tail_raw_frame_range": "36897-37232",
+        "side_tail_detections": "305/336 maxgap 11",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1601,6 +2183,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.186,
+        "frames_dropped_at_start": 336,
+        "realigned": true,
+        "front_frames": 66738,
+        "side_frames": 66738,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 336,
+        "tail_raw_frame_range": "71424-71759",
+        "side_tail_detections": "334/336 maxgap 2",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1635,6 +2230,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 5.62,
+        "frames_dropped_at_start": 169,
+        "realigned": true,
+        "front_frames": 36708,
+        "side_frames": 36708,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 169,
+        "tail_raw_frame_range": "37211-37379",
+        "side_tail_detections": "127/169 maxgap 21",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1669,6 +2277,19 @@
         "Harsh Acceleration": 9,
         "Harsh Braking": 3,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.119,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 86929,
+        "side_frames": 86929,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "88746-89079",
+        "side_tail_detections": "329/334 maxgap 3",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1703,6 +2324,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 2
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 31440,
+        "side_frames": 31440,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "39848-40182",
+        "side_tail_detections": "335/335 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1737,6 +2371,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.086,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 91598,
+        "side_frames": 91598,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "98917-99249",
+        "side_tail_detections": "303/333 maxgap 13",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1771,6 +2418,19 @@
         "Harsh Acceleration": 3,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.186,
+        "frames_dropped_at_start": 336,
+        "realigned": true,
+        "front_frames": 35152,
+        "side_frames": 35152,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 336,
+        "tail_raw_frame_range": "35898-36233",
+        "side_tail_detections": "336/336 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1805,6 +2465,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.12,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 73902,
+        "side_frames": 73902,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "77107-77440",
+        "side_tail_detections": "334/334 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1839,6 +2512,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 35887,
+        "side_frames": 35887,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "36815-37146",
+        "side_tail_detections": "317/332 maxgap 15",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1873,6 +2559,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 4.22,
+        "frames_dropped_at_start": 127,
+        "realigned": true,
+        "front_frames": 59485,
+        "side_frames": 59485,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 127,
+        "tail_raw_frame_range": "61802-61928",
+        "side_tail_detections": "127/127 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1907,6 +2606,19 @@
         "Harsh Acceleration": 4,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.253,
+        "frames_dropped_at_start": 338,
+        "realigned": true,
+        "front_frames": 34597,
+        "side_frames": 34597,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 338,
+        "tail_raw_frame_range": "35519-35856",
+        "side_tail_detections": "315/338 maxgap 23",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1943,6 +2655,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.186,
+        "frames_dropped_at_start": 336,
+        "realigned": true,
+        "front_frames": 87423,
+        "side_frames": 87423,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 336,
+        "tail_raw_frame_range": "89590-89925",
+        "side_tail_detections": "332/336 maxgap 4",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -1977,6 +2702,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 1
+      },
+      "video": {
+        "lead_in_s": 11.086,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 32737,
+        "side_frames": 32737,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "35456-35788",
+        "side_tail_detections": "321/333 maxgap 12",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2011,6 +2749,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.286,
+        "frames_dropped_at_start": 339,
+        "realigned": true,
+        "front_frames": 69314,
+        "side_frames": 69314,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 339,
+        "tail_raw_frame_range": "72326-72664",
+        "side_tail_detections": "324/339 maxgap 9",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2045,6 +2796,19 @@
         "Harsh Acceleration": 4,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 36590,
+        "side_frames": 36590,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "38157-38488",
+        "side_tail_detections": "332/332 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2081,6 +2845,17 @@
         "Harsh Acceleration": 3,
         "Harsh Braking": 1,
         "Harsh Turning": 1
+      },
+      "video": {
+        "lead_in_s": 11.02,
+        "frames_dropped_at_start": 331,
+        "realigned": true,
+        "front_frames": 58534,
+        "side_frames": null,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 331,
+        "tail_raw_frame_range": "61821-62151"
       }
     },
     {
@@ -2115,6 +2890,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 2,
         "Harsh Turning": 1
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 28151,
+        "side_frames": 28151,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "29577-29911",
+        "side_tail_detections": "307/335 maxgap 21",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2151,6 +2939,19 @@
         "Harsh Acceleration": 4,
         "Harsh Braking": 2,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 74324,
+        "side_frames": 74324,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "79866-80200",
+        "side_tail_detections": "108/335 maxgap 27",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2185,6 +2986,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.253,
+        "frames_dropped_at_start": 338,
+        "realigned": true,
+        "front_frames": 31209,
+        "side_frames": 31209,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 338,
+        "tail_raw_frame_range": "32863-33200",
+        "side_tail_detections": "199/338 maxgap 66",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2219,6 +3033,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 50911,
+        "side_frames": 50911,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 332,
+        "tail_raw_frame_range": "61374-61705",
+        "side_tail_detections": "319/332 maxgap 11",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2229,7 +3056,7 @@
       "has_physiology": true,
       "has_facial": true,
       "has_road_camera": true,
-      "drive_duration_s": 971.3,
+      "drive_duration_s": 654.6,
       "rows": 24284,
       "face_detection_rate": 0.9971,
       "emotion_frames": 29141,
@@ -2249,13 +3076,25 @@
         "bound_definition": "indicative: max(max_step_s, 2*MAD, 0.10 s); assumes the laptop's clock corrections seen in the ping log are representative of its error. The laptop clock's own offset from UTC at recording time is UNKNOWN and not included."
       },
       "exceptions": [
-        "noisier_telemetry_28g_glitch_despiked"
+        "noisier_telemetry_28g_glitch_despiked",
+        "truncated_at_654.52s_vbox_logging_pause_123s_gps_loss"
       ],
       "events_v2": {
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
-      }
+      },
+      "video": {
+        "lead_in_s": 11.053,
+        "frames_dropped_at_start": 332,
+        "realigned": true,
+        "front_frames": 19637,
+        "side_frames": 19637,
+        "note": "frame k <-> elapsed_s k/30; session truncated at the logging pause, video and telemetry end together",
+        "covers_full_session": true
+      },
+      "truncated_at_elapsed_s": 654.52,
+      "events_v2_note": "recomputed on the truncated file; see harsh_events_v2.csv"
     },
     {
       "driver": 17,
@@ -2289,6 +3128,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 83145,
+        "side_frames": 83145,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "84081-84415",
+        "side_tail_detections": "297/335 maxgap 5",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2323,6 +3175,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.119,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 36957,
+        "side_frames": 36957,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "37778-38111",
+        "side_tail_detections": "294/334 maxgap 18",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2352,11 +3217,26 @@
         "residual_alignment_bound_s": 0.1,
         "bound_definition": "indicative: max(max_step_s, 2*MAD, 0.10 s); assumes the laptop's clock corrections seen in the ping log are representative of its error. The laptop clock's own offset from UTC at recording time is UNKNOWN and not included."
       },
-      "exceptions": [],
+      "exceptions": [
+        "vbox_utc_vs_elapsed_divergence_0.92s_not_corrected"
+      ],
       "events_v2": {
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.02,
+        "frames_dropped_at_start": 331,
+        "realigned": true,
+        "front_frames": 58752,
+        "side_frames": 58752,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 331,
+        "tail_raw_frame_range": "65444-65774",
+        "side_tail_detections": "294/331 maxgap 10",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2391,6 +3271,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.253,
+        "frames_dropped_at_start": 338,
+        "realigned": true,
+        "front_frames": 34085,
+        "side_frames": 34085,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 338,
+        "tail_raw_frame_range": "39464-39801",
+        "side_tail_detections": "280/338 maxgap 23",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2425,6 +3318,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 2,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 54835,
+        "side_frames": 54835,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "55445-55779",
+        "side_tail_detections": "307/335 maxgap 28",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2461,6 +3367,19 @@
         "Harsh Acceleration": 5,
         "Harsh Braking": 1,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.186,
+        "frames_dropped_at_start": 336,
+        "realigned": true,
+        "front_frames": 33070,
+        "side_frames": 33070,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 336,
+        "tail_raw_frame_range": "33521-33856",
+        "side_tail_detections": "309/336 maxgap 18",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2490,11 +3409,26 @@
         "residual_alignment_bound_s": 0.33,
         "bound_definition": "indicative: max(max_step_s, 2*MAD, 0.10 s); assumes the laptop's clock corrections seen in the ping log are representative of its error. The laptop clock's own offset from UTC at recording time is UNKNOWN and not included."
       },
-      "exceptions": [],
+      "exceptions": [
+        "vbox_utc_vs_elapsed_divergence_0.60s_not_corrected"
+      ],
       "events_v2": {
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.12,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 41449,
+        "side_frames": 41449,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "48348-48681",
+        "side_tail_detections": "321/334 maxgap 3",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2529,6 +3463,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.12,
+        "frames_dropped_at_start": 334,
+        "realigned": true,
+        "front_frames": 38271,
+        "side_frames": 38271,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 334,
+        "tail_raw_frame_range": "41204-41537",
+        "side_tail_detections": "294/334 maxgap 23",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2563,6 +3510,19 @@
         "Harsh Acceleration": 2,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.22,
+        "frames_dropped_at_start": 337,
+        "realigned": true,
+        "front_frames": 52649,
+        "side_frames": 52649,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 337,
+        "tail_raw_frame_range": "54459-54795",
+        "side_tail_detections": "336/337 maxgap 1",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2597,6 +3557,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 5.653,
+        "frames_dropped_at_start": 170,
+        "realigned": true,
+        "front_frames": 36500,
+        "side_frames": 36500,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 170,
+        "tail_raw_frame_range": "37077-37246",
+        "side_tail_detections": "123/170 maxgap 14",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2631,6 +3604,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.086,
+        "frames_dropped_at_start": 333,
+        "realigned": true,
+        "front_frames": 64118,
+        "side_frames": 64118,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 333,
+        "tail_raw_frame_range": "68890-69222",
+        "side_tail_detections": "333/333 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2665,6 +3651,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.153,
+        "frames_dropped_at_start": 335,
+        "realigned": true,
+        "front_frames": 28969,
+        "side_frames": 28969,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 335,
+        "tail_raw_frame_range": "34315-34649",
+        "side_tail_detections": "310/335 maxgap 25",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2701,6 +3700,19 @@
         "Harsh Acceleration": 1,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 8.086,
+        "frames_dropped_at_start": 243,
+        "realigned": true,
+        "front_frames": 108375,
+        "side_frames": 108375,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 243,
+        "tail_raw_frame_range": "115181-115423",
+        "side_tail_detections": "243/243 maxgap 0",
+        "side_researcher_mask_px": 200
       }
     },
     {
@@ -2735,6 +3747,19 @@
         "Harsh Acceleration": 0,
         "Harsh Braking": 0,
         "Harsh Turning": 0
+      },
+      "video": {
+        "lead_in_s": 11.186,
+        "frames_dropped_at_start": 336,
+        "realigned": true,
+        "front_frames": 33043,
+        "side_frames": 33043,
+        "note": "frame k <-> elapsed_s k/30; video spans the full telemetry window; feature CSVs end lead_in_s earlier",
+        "covers_full_session": true,
+        "restored_tail_frames": 336,
+        "tail_raw_frame_range": "35905-36240",
+        "side_tail_detections": "311/336 maxgap 8",
+        "side_researcher_mask_px": 200
       }
     }
   ],
@@ -2829,5 +3854,31 @@
     "scr_events_native.csv": "native EmotiBit SCR events on the released timeline",
     "Calibration_Drives/": "threshold-calibration drives (native VBOX exports + manoeuvre intervals); calibration, not independent validation",
     "registered": "2026-09-13"
+  },
+  "release_version": 3,
+  "video_alignment": {
+    "statement": "Version 3: video frame k of {tag}_Front_blurred.mp4 / {tag}_Side_blurred.mp4 corresponds to elapsed_s = k/30 of the same session's fused.csv (and to unix_time = trimmed start + k/30), and the videos span the full telemetry window. The first round(lead_in_s*30) frames of the earlier (v1/v2) videos were dropped and the same number of frames restored at the end: front from the full-length output of the same blurring run; side by blurring the raw frames with the same detector, carry-forward rule and researcher mask, then visual review. Front_emotions.csv and Side_pose.csv use the same frame index but END lead_in_s BEFORE the telemetry (their rows for the restored frames were not recomputed). D1_S1's side video had additionally been cut twice in v1 (frame k = raw frame 2*fs_old + k); its missing first 41 s were restored from the raw recording by the same procedure.",
+    "why": "The VBOX HD2 starts its video file lead_in_s before the first logged telemetry sample (Racelogic 'Avi sync time' at row 0). Versions 1 and 2 mapped telemetry time to video frames assuming frame 0 = telemetry row 0, so their video-derived files showed, at elapsed tau, the scene at tau - lead_in_s. v3 drops the first round(lead_in_s*30) frames of the released (de-identified, verified) files and re-encodes them (h264_nvenc, cq 26); no new footage was introduced, so all blur, masking and exposure fixes remain valid with frame indices shifted by -round(lead_in_s*30).",
+    "verification": "05_technical_validation/audit_video_overlay_offset.py (raw-video speedometer overlay), audit_released_video_stop_frames.py (frame-pair stop test, 49 sessions), audit_vbox_time_continuity.py",
+    "restoration": "02_dataset_construction/regen_v3/restore_video_tails_v3.py; per-file report build_v3_tails_report.csv; review sheets 05_technical_validation/validation_output/video_tail_review/"
+  },
+  "hands_on_wheel_proxy": {
+    "version": 3,
+    "region_x0_x1_y0_y1": [
+      0.4,
+      0.7,
+      0.28,
+      0.62
+    ],
+    "audit_agreement_30_frames": 23,
+    "v1_region": [
+      0.25,
+      0.75,
+      0.55,
+      1.0
+    ],
+    "v1_audit_agreement": 7,
+    "previous_column": "hands_on_wheel_proxy_v1",
+    "code": "02_dataset_construction/regen_v3/recompute_hands_on_wheel_v3.py"
   }
 }

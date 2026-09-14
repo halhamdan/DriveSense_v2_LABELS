@@ -1,0 +1,4 @@
+setting,Harsh Acceleration,Harsh Braking,Harsh Turning,total
+-10% (more lenient),375,66,13,454
+Primary (as released),134,30,12,176
++10% (stricter),50,13,9,72

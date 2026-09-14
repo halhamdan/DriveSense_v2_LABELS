@@ -58,6 +58,12 @@ def main():
     tag = f"D{a.driver}_S{a.session}"
     f = Path(a.dataset_root) / "Preprocessed_Dataset" / f"D{a.driver}" / f"Session_{a.session}" / f"{tag}_fused.csv"
     df = pd.read_csv(f, usecols=["elapsed_s", "gps_speed_kmh", "lon_acc_g", "lat_acc_g", "EDA", "HR", "HR_dropout_flag", "label"])
+    # smoothed annotation signals exactly as the version-2 rule computes them (01_annotation)
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "01_annotation"))
+    from label_rule_variants import smoothed_signals  # noqa: E402
+    from label_harsh_events_v2 import PARAMS_V2  # noqa: E402
+    lon_s, lat_s = smoothed_signals(df, PARAMS_V2); df["lon_s"] = lon_s.to_numpy(); df["lat_s"] = lat_s.to_numpy()
     seg = df[(df.elapsed_s >= a.start) & (df.elapsed_s <= a.start + a.duration)].copy()
     seg["t"] = seg.elapsed_s - a.start
     hr = seg["HR"].where(~seg["HR_dropout_flag"].astype(bool))
@@ -71,11 +77,19 @@ def main():
 
     axes[0].plot(seg.t, seg.gps_speed_kmh, color="#333333", lw=1.4)
     axes[0].set_ylabel("Speed\n(km/h)")
-    axes[1].plot(seg.t, seg.lon_acc_g, color="#4C72B0", lw=1.0, label="Longitudinal")
-    axes[1].plot(seg.t, seg.lat_acc_g, color="#8172B2", lw=1.0, label="Lateral")
+    # raw one-sample GNSS derivatives (thin, light) and the annotation signals actually thresholded
+    # (5-sample median then 13-sample centred mean; signed, lateral shown as |mean|), with the v2 thresholds
+    axes[1].plot(seg.t, seg.lon_acc_g, color="#4C72B0", lw=0.6, alpha=0.35, label="Longitudinal (raw)")
+    axes[1].plot(seg.t, seg.lat_acc_g, color="#8172B2", lw=0.6, alpha=0.35, label="Lateral (raw)")
+    axes[1].plot(seg.t, seg.lon_s, color="#4C72B0", lw=1.6, label="Longitudinal (smoothed)")
+    axes[1].plot(seg.t, seg.lat_s, color="#8172B2", lw=1.6, label="|Lateral| (smoothed)")
+    for y, c, lab in [(0.20, "#F2C94C", "0.20 g accel."), (-0.35, "#E8956D", "-0.35 g brake"), (0.45, "#7FD1B9", "0.45 g turn")]:
+        axes[1].axhline(y, color=c, lw=1.0, ls="--")
+        axes[1].text(a.duration - 0.5, y, lab, color="#333333", fontsize=9, ha="right", va="bottom")
     axes[1].axhline(0, color="#999999", lw=0.8)
     axes[1].set_ylabel("Acceleration\n(g)")
-    axes[1].legend(loc="upper right", ncol=2, frameon=False)
+    axes[1].set_ylim(-1.0, 1.0)
+    axes[1].legend(loc="upper left", ncol=2, frameon=False, fontsize=9)
     axes[2].plot(seg.t, seg.EDA, color="#4C72B0", lw=1.4)
     axes[2].set_ylabel("EDA\n(µS)")
     axes[3].plot(seg.t, hr, color="#55A868", lw=1.4)

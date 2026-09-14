@@ -78,14 +78,16 @@ def main():
     schema = json.load(open(V1 / "data_schema.json", encoding="utf-8"))
     cols = schema["files"]["{tag}_fused.csv"]["columns"]
     cols["label"] = {"dtype": "string", "unit": None,
-                     "description": ("Deterministic harsh-event label, version 2 (2026-09-13): Normal | Harsh Acceleration | Harsh Braking | "
-                                     "Harsh Turning. Computed from the released columns by 01_annotation/label_harsh_events_v2.py: 0.5 s centred "
-                                     "moving average of lon_acc_g / |lat_acc_g|, exceedance sustained >= 0.5 s (gaps <= 0.2 s closed), thresholds "
-                                     "0.20 g (acceleration, with throttle > 25 % and speed > 15 km/h), 0.35 g (braking, speed > 15 km/h and "
-                                     "CAN-speed-derived deceleration <= -0.3 m/s^2), 0.45 g (|lateral|, speed > 30 km/h); priority Turning > "
-                                     "Braking > Acceleration. Thresholds calibrated on deliberate-manoeuvre drives in the study vehicle "
-                                     "(10/10 brakes at 0.35 g, 11/11 turns at 0.45 g; accelerations peak at 0.23-0.29 g, the vehicle's ceiling). "
-                                     "Events are the exceedance intervals themselves (no dilation).")}
+                     "description": ("Deterministic harsh-event label, version 2 (final 2026-09-13): Normal | Harsh Acceleration | Harsh Braking | "
+                                     "Harsh Turning. Computed from the released columns by 01_annotation/label_harsh_events_v2.py with explicit "
+                                     "integer windows at 25 Hz: 5-sample centred running median of the SIGNED lon_acc_g / lat_acc_g, then 13-sample "
+                                     "centred mean (k=-6..+6); lateral test on |mean| (not mean|.|); exceedance sustained >= 13 samples (0.52 s), gaps "
+                                     "<= 5 samples closed, no dilation; thresholds 0.20 g (acceleration, throttle > 25 %, speed > 15 km/h), 0.35 g "
+                                     "(braking, speed > 15 km/h, CAN-speed-derived deceleration <= -0.3 m/s^2), 0.45 g (|lateral|, speed > 30 km/h, "
+                                     "and net GNSS heading change >= 5 deg across the run); priority Turning > Braking > Acceleration. Verified on "
+                                     "synthetic signals: no single sample, two-sample burst, three-sample burst <= 2.6 g or alternating +/-1 g sequence "
+                                     "creates an event. Thresholds calibrated on deliberate-manoeuvre drives in the study vehicle (10/10 brakes, "
+                                     "11/11 turns; accelerations peak at 0.21-0.29 g, the vehicle's ceiling). Per-event diagnostics: harsh_events_v2.csv.")}
     cols["label_v1_peak"] = {"dtype": "string", "unit": None,
                              "description": ("Previous (version 1) label, retained for traceability and for continuity with analyses that used "
                                              "it (e.g. CBANet). v1 applied fixed thresholds (0.38 / -0.35 / 0.55 g) to rolling extrema of the "
@@ -95,9 +97,11 @@ def main():
                                              "Do not use as a measure of sustained harsh driving; use `label`.")}
     schema["changelog"].append({"date": date.today().isoformat(), "change": (
         "LABELS VERSION 2 (separate release tree Published_Dataset_Final_v2_LABELS): `label` recomputed with a sustained-exceedance rule on "
-        "0.5 s-smoothed acceleration (see column description); previous labels kept as `label_v1_peak`. Reason: the acceleration channels are "
-        "unsmoothed one-sample derivatives of 25 Hz Doppler speed/heading, and v1's rolling-extremum rule let single-sample spikes create "
-        f"events. Event totals v1 -> v2: {json.dumps(tot)}. No other column changed.")})
+        "median-filtered, 13-sample-averaged signed acceleration with a heading-change corroboration for turning (see column description); "
+        "previous labels kept as `label_v1_peak`. Reason: the acceleration channels are unsmoothed one-sample derivatives of 25 Hz Doppler "
+        "speed/heading, and v1's rolling-extremum rule let single-sample spikes create events. A first v2 draft (same day; mean of |lat| over a "
+        "12-sample window) was superseded after a robustness audit showed it labelled single spikes and alternating-sign noise as turning. "
+        f"Event totals v1 -> v2: {json.dumps(tot)}. No other column changed.")})
     schema["generated"] = date.today().isoformat(); schema["schema_version"] = "2.0"
     json.dump(schema, open(V2 / "data_schema.json", "w", encoding="utf-8"), indent=2, ensure_ascii=False)
 

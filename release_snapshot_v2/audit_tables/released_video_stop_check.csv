@@ -1,0 +1,2 @@
+tag,tau_s,lead_in_s,telemetry_speed_at_tau,telemetry_speed_at_tau_minus_lead,frame_change_at_tau,frame_change_at_tau_plus_lead,frame_change_control_moving,verdict
+D1_S2,240.96,11.12,0.1,42.8,0.9,1.42,7.33,inconclusive

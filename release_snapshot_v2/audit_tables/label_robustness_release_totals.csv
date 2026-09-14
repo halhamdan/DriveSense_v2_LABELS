@@ -1,0 +1,8 @@
+variant,Harsh Acceleration,Harsh Braking,Harsh Turning,total,nonnormal_rows
+"V0 draft (12/12/5, |.| then mean)",156,37,92,285,6470
+"V1 13/13/5, |.| then mean",142,30,80,252,6019
+"V2 13/13/5, mean then |.|",142,30,16,188,4565
+"V3 13/15/5, mean then |.|",118,16,15,149,4044
+"V4 13/13/5, mean then |.|, median-5 prefilter",134,30,14,178,4124
+"V5 13/15/5, mean then |.|, median-5 prefilter",113,16,10,139,3602
+V6 = V4 + heading change >= 5 deg (ADOPTED),134,30,12,176,4080

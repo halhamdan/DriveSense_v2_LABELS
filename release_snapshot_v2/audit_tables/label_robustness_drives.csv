@@ -1,0 +1,4 @@
+drive,"V0 draft (12/12/5, |.| then mean)","V1 13/13/5, |.| then mean","V2 13/13/5, mean then |.|","V3 13/15/5, mean then |.|","V4 13/13/5, mean then |.|, median-5 prefilter","V5 13/15/5, mean then |.|, median-5 prefilter",V6 = V4 + heading change >= 5 deg (ADOPTED)
+"S1: 10 brakes, 10 accels, 10 attempted turns (failed)",T0 B10 A15,T0 B10 A16,T0 B10 A16,T0 B9 A13,T0 B10 A16,T0 B9 A11,T0 B10 A16
+S2: accels + attempted turns (failed),T0 B3 A7,T0 B3 A7,T0 B3 A7,T0 B2 A7,T0 B3 A5,T0 B2 A4,T0 B3 A5
+S3: 11 turns,T12 B0 A1,T12 B0 A1,T12 B0 A1,T12 B0 A1,T12 B0 A1,T12 B0 A1,T12 B0 A1

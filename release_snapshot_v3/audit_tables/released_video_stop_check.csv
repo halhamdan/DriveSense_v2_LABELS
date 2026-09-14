@@ -1,0 +1,15 @@
+tag,tau_s,lead_in_s,telemetry_speed_at_tau,telemetry_speed_at_tau_minus_lead,frame_change_at_tau,frame_change_at_tau_plus_lead,frame_change_control_moving,verdict
+D1_S2,240.96,11.12,0.1,42.8,0.9,1.42,7.33,ALIGNED (frozen at tau)
+D5_S2,205.4,11.086,0.1,34.4,1.31,1.6,12.04,ALIGNED (frozen at tau)
+D5_S2,778.28,11.086,0.1,35.4,0.66,0.6,12.04,ALIGNED (frozen at tau)
+D11_S2,164.0,11.053,0.0,55.0,0.88,0.64,6.0,ALIGNED (frozen at tau)
+D16_S4,204.88,11.253,0.1,57.0,2.66,2.66,7.54,inconclusive
+D16_S4,716.4,11.253,0.1,68.8,1.51,1.78,7.54,ALIGNED (frozen at tau)
+D3_S1,2258.48,11.12,0.1,31.3,1.92,0.61,2.92,"OFFSET (scene moves at tau, frozen at tau+lead)"
+D3_S1,2476.44,11.12,0.0,48.8,0.78,3.53,2.92,"ALIGNED (frozen at tau, moving at tau+lead)"
+D7_S2,735.48,11.12,0.0,33.0,0.71,5.17,5.02,"ALIGNED (frozen at tau, moving at tau+lead)"
+D7_S2,816.64,11.12,0.1,53.6,1.26,0.3,5.02,ALIGNED (frozen at tau)
+D12_S3,600.32,11.186,0.0,40.1,1.33,0.82,8.61,ALIGNED (frozen at tau)
+D20_S4,198.92,11.186,0.1,44.1,0.55,0.79,8.23,ALIGNED (frozen at tau)
+D20_S4,786.8,11.186,0.1,48.1,1.08,0.99,8.23,ALIGNED (frozen at tau)
+D6_S4,661.84,11.153,0.1,39.1,3.91,0.57,9.87,inconclusive

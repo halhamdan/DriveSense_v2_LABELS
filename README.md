@@ -10,6 +10,16 @@ released dataset — harsh-event annotation, multimodal fusion, face/video de-id
 session trimming, and the technical-validation checks and figures reported in the
 manuscript.
 
+> **Release version 3 (2026-09-14) — video realignment.** The VBOX HD2 starts its video 10.4–11.3 s
+> before the first logged telemetry sample; the trimming in v1/v2 had not applied that lead-in, so
+> their videos and frame-indexed CSVs were late by that amount. `02_dataset_construction/regen_v3/
+> build_v3_video_realign.py` builds the complete v3 tree `Published_Dataset_Final_v3_VIDEO_ALIGNED`
+> (videos re-cut on the GPU from the released de-identified files, `Front_emotions.csv` / `Side_pose.csv`
+> shifted identically, D17_S2 truncated at a 123 s VBOX logging pause, fresh manifest). Evidence and
+> checks: `05_technical_validation/audit_video_overlay_offset.py`, `audit_released_video_stop_frames.py`,
+> `audit_vbox_time_continuity.py`, `make_video_lead_in_table.py`; descriptive files in `release_snapshot_v3/`;
+> details in `MANUAL_EXCEPTIONS_v3.md` §9.
+>
 > **Labels version 2 (2026-09-13).** This repository line carries the redefined harsh-event
 > labels described in manuscript v6: `01_annotation/label_harsh_events_v2.py` (the rule),
 > `02_dataset_construction/regen_v2/regenerate_labels_v2.py` (builds the separately named
@@ -244,14 +254,23 @@ derivative over a trailing 1 s window, so a single 40 ms spike could sustain a c
 samples; on the release 78-87 % of v1 events contained at most one consecutive sample above
 threshold (`audit_label_sensitivity_gnss.py`, `event_exceedance_structure.csv`).
 
-Version 2 (`01_annotation/label_harsh_events_v2.py`) is computed from the released `fused.csv`
-columns alone: 0.5 s centred moving average of `lon_acc_g` / |`lat_acc_g`|, exceedance sustained
->= 0.5 s (gaps <= 0.2 s closed, no dilation), thresholds 0.20 g acceleration (throttle > 25 %,
-speed > 15 km/h), 0.35 g braking (speed > 15 km/h and CAN-speed-derived deceleration
-<= -0.3 m/s^2), 0.45 g |lateral| (speed > 30 km/h), priority Turning > Braking > Acceleration.
-Thresholds were calibrated on the three deliberate-manoeuvre drives in the study vehicle
+Version 2 (`01_annotation/label_harsh_events_v2.py`, parameters in
+`01_annotation/label_rule_variants.py`) is computed from the released `fused.csv` columns alone,
+with all windows as explicit integer sample counts at 25 Hz: 5-sample centred running median of
+the signed `lon_acc_g` / `lat_acc_g`, then a 13-sample centred mean; the lateral test uses |mean|
+(so alternating-sign heading noise averages out rather than rectifying); exceedance sustained
+>= 13 samples (0.52 s), gaps <= 5 samples closed, no dilation; thresholds 0.20 g acceleration
+(throttle > 25 %, speed > 15 km/h), 0.35 g braking (speed > 15 km/h and CAN-speed-derived
+deceleration <= -0.3 m/s^2), 0.45 g |lateral| (speed > 30 km/h and net GNSS heading change
+>= 5 degrees across the run); priority Turning > Braking > Acceleration. Thresholds were
+calibrated on the three deliberate-manoeuvre drives in the study vehicle
 (`05_technical_validation/estimate_redefined_labels.py`; 10/10 brakes, 11/11 turns, accelerations
-peak at the vehicle's own 0.21-0.29 g ceiling). Totals: 156 / 37 / 92 = 285 events (v1: 10,394).
+peak at the vehicle's own 0.21-0.29 g ceiling). Robustness on synthetic signals and the
+per-event diagnostics table (`harsh_events_v2.csv` at the release root) come from
+`05_technical_validation/audit_label_robustness_v2.py` (`synthetic | drives | release | events |
+sensitivity | stats`). Totals: 134 / 30 / 12 = 176 events (v1: 10,394). A first v2 draft of the
+same day (mean of |lat| over a 12-sample window) was withdrawn after that audit showed it labelled
+single-sample spikes and alternating-sign noise as turning.
 
 ```
 DATASET_ROOT=/path/to/Published_Dataset_Final \
@@ -260,7 +279,9 @@ python 02_dataset_construction/regen_v2/regenerate_labels_v2.py --apply    # wri
 LABELS_V2=1 python 05_technical_validation/audit_manuscript_numbers.py     # checks manuscript v6 numbers (0 FAIL / 78)
 PREPROCESSED_ROOT=/path/to/Published_Dataset_Final_v2_LABELS python 06_figures/make_route_harsh_density_figure.py
 python 06_figures/make_alignment_figure.py --dataset-root /path/to/Published_Dataset_Final_v2_LABELS \
-       --driver 6 --session 4 --start 160.2 --out-name fig_multimodal_alignment_v2
+       --driver 13 --session 2 --start 133.3 --out-name fig_multimodal_alignment_v2
+python 05_technical_validation/cache_release_columns.py                    # column cache for the robustness audit
+python 05_technical_validation/audit_label_robustness_v2.py events         # -> harsh_events_v2_table.csv
 ```
 
 ## Known limitations of this release

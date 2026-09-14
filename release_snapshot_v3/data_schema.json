@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "3.0",
   "generated": "2026-09-13",
   "description": "Column-level typed data dictionary for the DriveSense Preprocessed_Dataset tier's per-session CSV files. All timestamped fields use unix_time (absolute, UTC epoch seconds) as the primary time reference; elapsed_s and per-file frame/timestamp_s columns are session- or video-relative.",
   "files": {
@@ -443,12 +443,13 @@
           "unit": "normalised [0,1] frame fraction"
         },
         "hands_on_wheel_proxy": {
-          "dtype": "float64",
+          "dtype": "float",
+          "unit": null,
           "range": [
             0,
             1
           ],
-          "description": "Fixed-region heuristic; sensitive to seating position and camera framing (Usage Notes)."
+          "description": "Fraction (0, 0.5, 1) of the two released wrist keypoints lying inside the steering-wheel region of the normalised side-camera frame, x 0.40-0.70, y 0.28-0.62 (origin top-left), measured from the frames of this fixed camera framing (v3, 2026-09-14; regen_v3/recompute_hands_on_wheel_v3.py). Computed from the released wrist coordinates only (a missing wrist counts as not on the wheel); missing on rows without a pose detection. Agrees with a visual reading of hand placement in 23 of 30 reproducibly selected audited frames (disagreements are half-step errors). A coarse descriptive indicator, not validated hand-wheel contact."
         },
         "posture_deviation": {
           "dtype": "float64",
@@ -457,6 +458,15 @@
         "motion_energy": {
           "dtype": "float64",
           "description": "Non-negative frame-to-frame motion summary; occasional large values are a known BlazePose occlusion-extrapolation artefact (Technical Validation)."
+        },
+        "hands_on_wheel_proxy_v1": {
+          "dtype": "float",
+          "unit": null,
+          "range": [
+            0,
+            1
+          ],
+          "description": "The value released in versions 1-2: same construction with the region x 0.25-0.75, y 0.55-1.0 and a landmark-visibility gate (> 0.5) applied at extraction. That region lies mostly below the wheel in this framing, so the column under-reports hands on the wheel (agreed with the visual reading in 7 of 30 audited frames). Retained for traceability only; do not use."
         }
       }
     },
@@ -551,6 +561,23 @@
     {
       "date": "2026-09-13",
       "change": "Release-level extras registered 2026-09-13: harsh_events_v2.csv, scr_events_native.csv, Calibration_Drives/ (see files)."
+    },
+    {
+      "date": "2026-09-13",
+      "change": "VERSION 3 (separate tree Published_Dataset_Final_v3_VIDEO_ALIGNED): (1) all 153 videos and the 154 frame-indexed CSVs realigned to the telemetry timeline by dropping the per-session video lead-in (10.4-11.3 s) that the v1 trimming had not applied; videos re-encoded with NVENC from the released files; each video now ends lead_in_s before the telemetry. (2) D17_S2 truncated at released elapsed 654.52 s: the VBOX paused logging for 123.4 s (satellites 0) while its elapsed counter continued, so unix_time after that instant was 123.4 s too early in v1/v2 (EmotiBit misaligned); its v2 labels recomputed on the truncated file. (3) D8_S1, D18_S1, D4_S1, D19_S1: UTC-vs-elapsed divergence of 1.44/0.92/0.64/0.60 s disclosed per session (not corrected). All other files identical to v2 (fused.csv, labels) and v1 (raw CSVs)."
+    },
+    {
+      "date": "2026-09-14",
+      "change": "VERSION 3, second pass: video coverage restored to the full telemetry window (front tails from the full-length blurred recording; side tails and D1_S1's missing first 41 s blurred from the raw frames with the release's own detector and rules, then visually reviewed). Front_emotions.csv / Side_pose.csv unchanged (end lead_in_s before the telemetry). manifest.csv rebuilt."
+    },
+    {
+      "date": "2026-09-14",
+      "change": "Side_pose.csv: hands_on_wheel_proxy recomputed from the released wrist coordinates with a wheel region measured from the frames (x 0.40-0.70, y 0.28-0.62); previous column kept as hands_on_wheel_proxy_v1 (all 75 files). Reason: the 60-frame visual audit found the v1 region lay below the wheel (7/30 agreement; 23/30 after recalibration)."
     }
-  ]
+  ],
+  "video_alignment": {
+    "statement": "Version 3: video frame k of {tag}_Front_blurred.mp4 / {tag}_Side_blurred.mp4 corresponds to elapsed_s = k/30 of the same session's fused.csv (and to unix_time = trimmed start + k/30), and the videos span the full telemetry window. The first round(lead_in_s*30) frames of the earlier (v1/v2) videos were dropped and the same number of frames restored at the end: front from the full-length output of the same blurring run; side by blurring the raw frames with the same detector, carry-forward rule and researcher mask, then visual review. Front_emotions.csv and Side_pose.csv use the same frame index but END lead_in_s BEFORE the telemetry (their rows for the restored frames were not recomputed). D1_S1's side video had additionally been cut twice in v1 (frame k = raw frame 2*fs_old + k); its missing first 41 s were restored from the raw recording by the same procedure.",
+    "why": "The VBOX HD2 starts its video file lead_in_s before the first logged telemetry sample (Racelogic 'Avi sync time' at row 0). Versions 1 and 2 mapped telemetry time to video frames assuming frame 0 = telemetry row 0, so their video-derived files showed, at elapsed tau, the scene at tau - lead_in_s. v3 drops the first round(lead_in_s*30) frames of the released (de-identified, verified) files and re-encodes them (h264_nvenc, cq 26); no new footage was introduced, so all blur, masking and exposure fixes remain valid with frame indices shifted by -round(lead_in_s*30).",
+    "verification": "05_technical_validation/audit_video_overlay_offset.py (raw-video speedometer overlay), audit_released_video_stop_frames.py (frame-pair stop test, 49 sessions), audit_vbox_time_continuity.py"
+  }
 }

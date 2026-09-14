@@ -16,15 +16,19 @@ Columns:
   Coverage (%)        span of the ping log as % of the drive                   [measured]
   Ping MAD (ms)       robust scatter of ping offsets about the anchor          [measured]
   Max step (s)        largest sustained offset step in the ping log            [measured]
-  Bound (s)           indicative bound on residual EmotiBit-to-VBOX error:
-                      max(step, 2 x MAD, 0.10 s)                                [estimated]
-  Notes               coverage < 50 % (anchor from a short window), VBOX first-
+  Longest gap (s)     longest interval between consecutive pings (from
+                      make_ping_cadence_table.py; pings come in 5.1 s bursts
+                      with long silent intervals)                                [measured]
+  Variability (s)     observed timing-variability indicator
+                      max(step, 2 x MAD, 0.10 s)  (CSV column kept as bound_s)   [derived]
+  Notes               span < 50 % (anchor from a short window), VBOX first-
                       sample GPS-time gap (D1_S4, D12_S2), two raw recordings
 
 The laptop-clock-to-UTC error at recording time is UNKNOWN for every session
-and is not in the table; the Bound column is an indicative estimate that
-assumes the laptop's clock corrections observed in the ping logs are
-representative of its error, which cannot be verified retrospectively.
+and is not in the table. The variability indicator is NOT a bound on the
+absolute EmotiBit-to-VBOX alignment error (a consistently wrong laptop clock
+shows no scatter and no step); it was called an "indicative bound" in
+manuscript v5 and the first v6 draft and renamed on 2026-09-13.
 
 Usage:
     python make_timing_quality_table.py
@@ -67,10 +71,18 @@ def main():
     T["mad_ms"] = aud.anchor_only_mad_ms.reindex(T.index)
     T["step_s"] = rep.max_step_s.abs()
     T["bound_s"] = np.maximum.reduce([T.step_s.to_numpy(), 2 * T.mad_ms.to_numpy() / 1000.0, np.full(len(T), 0.10)])
+    # Column name kept as bound_s in the CSV for backwards compatibility; it is reported as the
+    # "observed timing-variability indicator" -- NOT a bound on absolute alignment error.
+    cad = BASE / "validation_output" / "ping_cadence_per_session.csv"
+    if cad.exists():
+        C = pd.read_csv(cad).set_index("tag")
+        T["longest_gap_s"] = C.longest_gap_s.reindex(T.index)
+    else:
+        T["longest_gap_s"] = np.nan
     notes = []
     for t, r in T.iterrows():
         n = []
-        if r.coverage_pct < 50: n.append(f"ping log covers {r.coverage_pct:.0f}\\% of drive")
+        if r.coverage_pct < 50: n.append(f"ping span covers {r.coverage_pct:.0f}\\% of drive")
         if t in GPS_FIRST_SAMPLE_GAP: n.append("VBOX first-sample GPS-time gap")
         if t in TWO_RECORDINGS: n.append("two raw EmotiBit recordings; larger used")
         notes.append("; ".join(n))
@@ -78,26 +90,29 @@ def main():
     T = T.sort_values(["driver", "session"])
     T.round(3).to_csv(OUT_CSV)
 
-    hdr = r"Session & Dur.\ (min) & Pings & Coverage (\%) & Ping MAD (ms) & Max step (s) & Bound (s) & Notes \\"
-    cap = (r"\caption{Per-session timing quality for the alignment between the two independent recording systems. "
+    hdr = r"Session & Dur.\ (min) & Pings & Span (\%) & Longest gap (s) & Ping MAD (ms) & Max step (s) & Variability (s) & Notes \\"
+    cap = (r"\caption{Per-session timing evidence for the alignment between the two independent recording systems. "
            r"Within the VBOX HD2, telemetry, GNSS and both video streams share one GNSS-disciplined clock and are exact "
            r"to the sample/frame. The EmotiBit device clock is mapped to UTC by the session-median offset over NTP-style "
-           r"sync pings exchanged with the logging laptop (Methods). Measured columns: number of pings used; coverage of "
-           r"the drive by the ping log; robust scatter (median absolute deviation) of the per-ping offsets about the "
-           r"anchor; largest sustained offset step in the log. Estimated column: an indicative bound on the residual "
-           r"EmotiBit-to-VBOX alignment error, $\max(\text{step},\,2\times\text{MAD},\,0.10\,\text{s})$, which assumes the "
-           r"laptop's clock corrections observed in the log are representative of its error. Unknown for every session, "
-           r"and therefore not tabulated: the laptop clock's own offset from UTC at recording time, which no retained "
-           r"record measures; users should read the Bound column as indicative, not verified. Notes flag sessions whose "
-           r"ping log covers less than half of the drive (anchor estimated from a short window; later host-clock "
-           r"corrections, if any, are unobserved), the two sessions with a 0.12--0.16\,s gap between the first two VBOX GPS "
-           r"timestamps (a VBOX-side anchor uncertainty of that size), and sessions with two raw EmotiBit recordings.}")
-    lines = [r"\footnotesize", r"\setlength{\tabcolsep}{3pt}", r"\begin{longtable}{@{}lrrrrrrp{3.6cm}@{}}", cap,
+           r"sync pings exchanged with the logging laptop (Methods). Measured columns: number of pings used; the span "
+           r"bracketed by the first and last ping as a percentage of the drive (bracketing, not continuous sampling: pings "
+           r"arrive in bursts at a 5.1\,s cadence separated by silent intervals when the Wi-Fi link dropped); the longest "
+           r"gap between consecutive pings; robust scatter (median absolute deviation) of the per-ping offsets about the "
+           r"anchor; largest sustained offset step in the log. Derived column: the observed timing-variability indicator "
+           r"$\max(\text{step},\,2\times\text{MAD},\,0.10\,\text{s})$, which summarises how much the laptop-to-device offset "
+           r"was seen to vary during the recording. It is not a bound on the EmotiBit-to-VBOX alignment error: the laptop "
+           r"clock's own offset from UTC at recording time was not measured for any session, so the absolute cross-device "
+           r"alignment uncertainty is unknown and is not tabulated. Notes flag sessions whose ping span covers less than half "
+           r"of the drive (anchor estimated from a short window), the two sessions with a 0.12--0.16\,s gap between the first "
+           r"two VBOX GPS timestamps (a VBOX-side anchor uncertainty of that size), and sessions with two raw EmotiBit "
+           r"recordings. Bold rows: variability indicator above 0.30\,s.}")
+    lines = [r"\scriptsize", r"\setlength{\tabcolsep}{2.5pt}", r"\renewcommand{\arraystretch}{0.9}", r"\begin{longtable}{@{}lrrrrrrrp{3.4cm}@{}}", cap,
              r"\label{tab:si-timing}\\", r"\toprule", hdr, r"\midrule", r"\endfirsthead",
-             r"\multicolumn{8}{c}{\tablename\ \thetable{} -- continued}\\", r"\toprule", hdr, r"\midrule", r"\endhead",
+             r"\multicolumn{9}{c}{\tablename\ \thetable{} -- continued}\\", r"\toprule", hdr, r"\midrule", r"\endhead",
              r"\bottomrule", r"\endfoot"]
     for t, r in T.iterrows():
-        cells = [esc(t), f"{r.dur_min:.1f}", f"{r.pings}", f"{r.coverage_pct:.0f}", f"{r.mad_ms:.0f}", f"{r.step_s:.2f}", f"{r.bound_s:.2f}", r.notes]
+        gap = f"{r.longest_gap_s:.0f}" if np.isfinite(r.longest_gap_s) else "--"
+        cells = [esc(t), f"{r.dur_min:.1f}", f"{r.pings}", f"{r.coverage_pct:.0f}", gap, f"{r.mad_ms:.0f}", f"{r.step_s:.2f}", f"{r.bound_s:.2f}", r.notes]
         if r.bound_s > 0.3:
             cells = [rf"\textbf{{{c}}}" if c else c for c in cells]
         lines.append(" & ".join(cells) + r" \\")

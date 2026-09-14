@@ -9,4 +9,4 @@ Label-only delta over the v1 release (`Published_Dataset_Final`), created 2026-0
   files not in this tree refer to the unchanged v1 files).
 * NOT duplicated here (unchanged, take from v1): `Raw_Dataset/`, `Front_emotions.csv`, `Side_pose.csv`.
 
-Event totals v1 -> v2: {"Harsh Acceleration": 156, "Harsh Turning": 92, "Harsh Braking": 37}.
+Event totals v1 -> v2: {"Harsh Acceleration": 134, "Harsh Braking": 30, "Harsh Turning": 12}.

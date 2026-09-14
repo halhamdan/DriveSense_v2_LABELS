@@ -1,0 +1,4 @@
+drive,file,date_utc,start_utc,duration_min,manoeuvres_performed,labelled_A,labelled_B,labelled_T,max_smoothed_lateral_outside_turn_events_g,rule_modifications
+Drive 1,validation_session.csv,2026-08-05,18:25:31.96,11.2,"10 hard brakes, 10 full-throttle accelerations, 10 attempted hard turns (not achieved)",16,10,0,0.32,GNSS speed substituted for CAN speed in the braking corroboration; throttle gate disabled (no CAN channels in these exports)
+Drive 2,validation_session2.csv,2026-08-17,16:41:17.76,19.7,full-throttle accelerations and attempted hard turns (not achieved); counts not recorded,5,3,0,0.41,GNSS speed substituted for CAN speed in the braking corroboration; throttle gate disabled (no CAN channels in these exports)
+Drive 3,validation_session3.csv,2026-08-17,19:15:55.68,2.7,"11 hard turns, counted aloud",1,0,12,0.45,GNSS speed substituted for CAN speed in the braking corroboration; throttle gate disabled (no CAN channels in these exports)

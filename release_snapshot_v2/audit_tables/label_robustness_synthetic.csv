@@ -1,0 +1,15 @@
+case,"V0 draft (12/12/5, |.| then mean)","V1 13/13/5, |.| then mean","V2 13/13/5, mean then |.|","V3 13/15/5, mean then |.|","V4 13/13/5, mean then |.|, median-5 prefilter","V5 13/15/5, mean then |.|, median-5 prefilter",V6 = V4 + heading change >= 5 deg (ADOPTED)
+single 6.06 g lateral spike (dataset max),T1 B0 A0,T1 B0 A0,T1 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+single 5.5 g lateral spike,T1 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+2-sample 3.0 g lateral burst,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+3-sample 2.0 g lateral burst,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+3-sample 2.6 g lateral burst (p90 of class),T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+alternating +/-0.6 g for 2 s,T1 B0 A0,T1 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+alternating +/-1.0 g for 2 s,T1 B0 A0,T1 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+sustained 0.55 g for 1.0 s + noise sd 0.15,T1 B0 A0,T1 B0 A0,T1 B0 A0,T1 B0 A0,T1 B0 A0,T1 B0 A0,T1 B0 A0
+sustained 0.55 g for 1.0 s + alternating +/-0.3 g,T1 B0 A0,T1 B0 A0,T1 B0 A0,T1 B0 A0,T1 B0 A0,T1 B0 A0,T1 B0 A0
+sustained 0.60 g for 0.40 s (below min duration),T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+sustained 0.60 g for 0.60 s,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+sustained 0.60 g for 0.52 s,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+"single -3.38 g longitudinal spike, CAN decel 1 m/s^2",T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0,T0 B0 A0
+"sustained -0.45 g braking 1.0 s, CAN decel 1 m/s^2",T0 B1 A0,T0 B1 A0,T0 B1 A0,T0 B1 A0,T0 B1 A0,T0 B1 A0,T0 B1 A0
