@@ -87,6 +87,19 @@ EXPECTED_V3 = {
     "facial_rows": (4170203, 0), "facial_sum_ok_pct": (98.96, 0.005),
     "eda_median": (1.56, 0.005), "eda_oor_pct": (5.63, 0.005), "ibi_dropout_pct": (17.81, 0.005), "scr_present_pct": (12.03, 0.005),
 }
+# release v3 with VERSION-1 labels (Published_Dataset_Final_v3_LABELS_v1; manuscript v5.2): v1 EXPECTED + v3-timeline values
+EXPECTED_V3L1 = {
+    "fused_rows": (3496151, 0), "hours": (38.85, 0.005), "normal_ts": (2955270, 0), "accel_ts": (52006, 0), "brake_ts": (302215, 0), "turn_ts": (186660, 0),
+    "normal_pct": (84.53, 0.005), "brake_pct": (8.64, 0.005), "turn_pct": (5.34, 0.005),
+    "accel_events": (1427, 0), "brake_events": (6301, 0), "turn_events": (2641, 0), "total_events": (10369, 0),
+    "accel_iqr": ("1.08-1.62", None), "turn_iqr": ("1.96-3.04", None), "events_per_driver_median": (508, 0),
+    "wheel_p95_abs": (1.12, 0.005), "wheel_gt5_pct": (0.13, 0.005), "height_oor_pct": (0.0068, 0.00005),
+    "facial_rows": (4170203, 0), "facial_sum_ok_pct": (98.96, 0.005),
+    "eda_median": (1.56, 0.005), "eda_oor_pct": (5.63, 0.005), "ibi_dropout_pct": (17.81, 0.005), "scr_present_pct": (12.03, 0.005),
+}
+if os.environ.get("RELEASE_V3L1", "") == "1":
+    EXPECTED.update(EXPECTED_V3L1)
+    OUT = OUT.with_name("manuscript_numbers_check_v3L1.csv")
 if os.environ.get("RELEASE_V3", "") == "1":
     EXPECTED.update(EXPECTED_V3)
     OUT = OUT.with_name("manuscript_numbers_check_v3.csv")
