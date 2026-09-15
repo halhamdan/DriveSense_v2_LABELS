@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-V2 = Path(os.environ.get("PREPROCESSED_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final_v2_LABELS")
+V2 = Path(os.environ.get("PREPROCESSED_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\3_OLD_versions\data\Published_Dataset_Final_v2_LABELS")
 OUT = Path(__file__).resolve().parent / "validation_output" / "release_columns_cache.npz"
 COLS = ["elapsed_s", "gps_speed_kmh", "speed_kph", "throttle_pct", "lat_acc_g", "lon_acc_g", "heading_deg", "label", "label_v1_peak"]
 

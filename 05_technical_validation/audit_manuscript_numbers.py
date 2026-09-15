@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 
 DATASET_ROOT = Path(os.environ.get("DATASET_ROOT", "") or
-                    r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final")
+                    r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final")
 # LABELS_V2=1 checks manuscript v6 (version-2 labels): the fused files come from the
 # label-only v2 tree (PREPROCESSED_ROOT, default sibling Published_Dataset_Final_v2_LABELS),
 # everything else still from the v1 release.

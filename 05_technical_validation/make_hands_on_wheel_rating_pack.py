@@ -28,7 +28,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final_v3_VIDEO_ALIGNED")
+ROOT = Path(os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\1_LATEST__labels_v2__release_v3__paper_v6\data\Published_Dataset_Final_v3_VIDEO_ALIGNED")
 OUT = Path(__file__).resolve().parent / "validation_output" / "hands_on_wheel_rating"
 OUT.mkdir(parents=True, exist_ok=True)
 SEED = 20260914

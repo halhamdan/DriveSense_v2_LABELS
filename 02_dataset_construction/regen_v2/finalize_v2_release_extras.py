@@ -22,7 +22,7 @@ from pathlib import Path
 
 import pandas as pd
 
-V2 = Path(os.environ.get("V2_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final_v2_LABELS")
+V2 = Path(os.environ.get("V2_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\3_OLD_versions\data\Published_Dataset_Final_v2_LABELS")
 
 
 def sha256(p: Path) -> str:

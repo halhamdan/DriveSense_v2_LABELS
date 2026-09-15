@@ -35,7 +35,7 @@ sys.path.insert(0, str(HERE.parent / "02_dataset_construction"))
 from emotibit_sync_v2 import load_emotibit_v2  # noqa: E402
 
 STAGING = Path(os.environ.get("STAGING_DATA_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\Data")
-ROOT = Path(os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final")
+ROOT = Path(os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final")
 RELEASE = Path(os.environ.get("RELEASE_ROOT", "") or "")
 OUT = HERE / "validation_output"
 TRIM = HERE.parent / "04_session_trimming" / "trim_review_output" / "trim_points_final.csv"

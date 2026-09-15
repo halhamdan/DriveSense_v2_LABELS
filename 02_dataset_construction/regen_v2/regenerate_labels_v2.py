@@ -35,7 +35,7 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "01_annotation"))
 from label_harsh_events_v2 import label_fused_v2, count_events, CONFIG_V2  # noqa: E402
 
-V1 = Path(os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final")
+V1 = Path(os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final")
 V2 = Path(os.environ.get("V2_ROOT", "") or (V1.parent / "Published_Dataset_Final_v2_LABELS"))
 REPORT = REPO.parent / "regenerated_v3" / "labels_v2_report.csv"
 

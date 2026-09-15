@@ -61,7 +61,7 @@ tbl["hr_ok"] = tbl["hr_drop"] < DROPOUT_SCREEN
 # Availability of the released IBI channel: rows that are both present (not dropout-flagged)
 # and inside the plausible 300-1500 ms range, as a fraction of all rows and in minutes.
 import json, os  # noqa: E402
-_root = os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final"
+_root = os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final"
 _meta = {s["tag"]: s for s in json.load(open(os.path.join(_root, "dataset_metadata.json"), encoding="utf-8"))["sessions"]}
 tbl["dur_min"] = [(_meta[t]["drive_duration_s"] / 60.0) if t in _meta else float("nan") for t in tbl.index]
 tbl["ibi_avail_pct"] = (1 - tbl["hr_drop"] / 100) * (1 - tbl["ibi_oor"] / 100) * 100

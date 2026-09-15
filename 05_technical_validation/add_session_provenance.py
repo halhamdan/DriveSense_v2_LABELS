@@ -35,7 +35,7 @@ from pathlib import Path
 import pandas as pd
 
 DATASET_ROOT = Path(os.environ.get("DATASET_ROOT", "") or
-                    r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final")
+                    r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final")
 REGEN_REPORT = Path(os.environ.get("REGEN_REPORT", "") or
                     (Path(__file__).resolve().parents[2] / "regenerated_v3" / "regeneration_report.csv"))
 META = DATASET_ROOT / "dataset_metadata.json"

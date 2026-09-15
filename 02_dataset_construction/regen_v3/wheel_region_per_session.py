@@ -33,7 +33,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-V3 = Path(os.environ.get("V3_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final_v3_VIDEO_ALIGNED")
+V3 = Path(os.environ.get("V3_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\1_LATEST__labels_v2__release_v3__paper_v6\data\Published_Dataset_Final_v3_VIDEO_ALIGNED")
 REPO = Path(__file__).resolve().parents[2]
 OUTD = REPO / "05_technical_validation" / "validation_output"
 REV = OUTD / "wheel_fit_review"

@@ -326,3 +326,5 @@ Built by `02_dataset_construction/regen_v3/build_v3_video_realign.py` into
 * **Independent blind check, 100 frames** (`make_hands_on_wheel_rating_pack.py`, `score_hands_on_wheel_ratings.py`,
   rater CL): recomputed proxy exact 59 %, within one hand 93 %, quadratic κ 0.55 (stopped 74 %, moving 44 %);
   v1 25 %. This — not 23/30 — is what v6 quotes. Second rater (Hanadi) pending: `hands_on_wheel_rating/rating_template.csv`.
+* Second rater (HA, 2026-09-15): proxy exact 75 % / within one hand 98 % / quadratic κ 0.74 on 87 judgeable
+  frames; inter-rater CL–HA 57 % (κq 0.53). v6 quotes both raters. Files: `hands_on_wheel_rating/ratings_HA.csv`.

@@ -44,7 +44,7 @@ import pandas as pd
 
 BASE = Path(__file__).resolve().parent
 DATASET_ROOT = Path(os.environ.get("DATASET_ROOT", "") or
-                    r"C:\Users\halha\OneDrive - Durham University\Documents\Published_Dataset_Final")
+                    r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final")
 REGEN = BASE.parents[1] / "regenerated_v3" / "regeneration_report.csv"
 AUDIT = BASE / "validation_output" / "emotibit_timesync_full_report.csv"
 OUT = BASE / "validation_output" / "si_timing_quality_table.tex"

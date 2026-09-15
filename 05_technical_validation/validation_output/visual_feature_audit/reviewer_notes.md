@@ -64,3 +64,10 @@ Recomputed column (fixed measured region): exact 59/100, within one hand 93/100,
 (quadratic 0.55), 25 over / 16 under; stopped 74 %, moving 44 % (hands hovering near or holding the
 rim outside the region). v1 column: 25/100, kappa < 0. The 23/30 figure was therefore optimistic;
 59 % / 93 % is the number to quote. Second rater pending (rating_template.csv).
+
+## Second rater (Hanadi Alhamdan, 2026-09-15, `ratings_HA.csv`)
+87 frames judged, 13 marked u (hand hidden). Recomputed proxy vs HA: exact 65/87 = 75 %, within one hand 98 %,
+kappa 0.62 (quadratic 0.74), 16 under / 6 over; moving 77 %, stopped 72 %. v1 vs HA: 37 %. Inter-rater CL vs
+HA: exact 57 %, kappa 0.38 (quadratic 0.53) -- CL (thumbnails) scored many more frames as 0 hands (41 vs 19).
+The proxy agrees with the better-informed rater about as well as the two raters agree with each other.
+Manuscript v6 quotes both raters and the inter-rater agreement.
