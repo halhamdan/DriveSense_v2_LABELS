@@ -25,7 +25,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final")
+ROOT = Path(os.environ.get("DATASET_ROOT", "") or r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\3_OLD_versions\data\Published_Dataset_Final_v1_ORIGINAL_20260909")
 HERE = Path(__file__).resolve().parent
 LEAD = pd.read_csv(HERE / "validation_output" / "video_lead_in_per_session.csv").set_index("tag")["lead_in_s"]
 EVID = HERE / "validation_output" / "video_offset_evidence"; EVID.mkdir(exist_ok=True, parents=True)

@@ -36,7 +36,7 @@ import precursor_analysis_matched as pam  # noqa: E402
 
 import os
 
-RELEASE_ROOT = Path(r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final\Preprocessed_Dataset")
+RELEASE_ROOT = Path(r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\3_OLD_versions\data\Published_Dataset_Final_v1_ORIGINAL_20260909\Preprocessed_Dataset")
 # "After" tree: REGEN_ROOT env var (e.g. regenerated_v3 for the anchor-only
 # model); defaults to the 2026-09-08 regenerated_v2 tree.
 V2_ROOT = Path(os.environ.get("REGEN_ROOT", "") or r"C:\Users\halha\Desktop\Nature Data Paper\regenerated_v2\Preprocessed_Dataset")

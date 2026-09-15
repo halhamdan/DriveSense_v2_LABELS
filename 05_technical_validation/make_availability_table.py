@@ -21,7 +21,7 @@ from pathlib import Path
 import pandas as pd
 
 DATASET_ROOT = Path(os.environ.get("DATASET_ROOT", "") or
-                    r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final")
+                    r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\3_OLD_versions\data\Published_Dataset_Final_v1_ORIGINAL_20260909")
 OUT = Path(__file__).resolve().parent / "validation_output" / "si_availability_table.tex"
 
 # Side camera recorded but nothing usable released (camera unmounted mid-session; 14.5 % pose detection)

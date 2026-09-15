@@ -6,7 +6,7 @@ Output: validation_output/released_trim_endpoint_speeds.csv"""
 from pathlib import Path
 import numpy as np, pandas as pd
 
-R = Path(r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final\Preprocessed_Dataset")
+R = Path(r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\3_OLD_versions\data\Published_Dataset_Final_v1_ORIGINAL_20260909\Preprocessed_Dataset")
 rows = []
 for f in sorted(R.rglob("*_fused.csv")):
     d = pd.read_csv(f, usecols=["elapsed_s", "gps_speed_kmh"]); v = d.gps_speed_kmh.to_numpy(); e = d.elapsed_s.to_numpy()

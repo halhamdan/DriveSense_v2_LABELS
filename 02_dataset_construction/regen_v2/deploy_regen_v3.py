@@ -37,7 +37,7 @@ import numpy as np
 import pandas as pd
 
 DATASET_ROOT = Path(os.environ.get("DATASET_ROOT", "") or
-                    r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\2_PREVIOUS__labels_v1__release_v1__paper_v5\data\Published_Dataset_Final")
+                    r"C:\Users\halha\OneDrive - Durham University\Documents\DriveSense_Packages\3_OLD_versions\data\Published_Dataset_Final_v1_ORIGINAL_20260909")
 REGEN_ROOT = Path(os.environ.get("REGEN_OUT_ROOT", "") or (Path(__file__).resolve().parents[3] / "regenerated_v3"))
 BACKUP_DIR = DATASET_ROOT / "Preprocessed_Dataset_PRE_ANCHOR_ONLY_FIX_BACKUP"
 REPORT = REGEN_ROOT / "regeneration_report.csv"
